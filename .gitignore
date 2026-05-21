@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# Dependencies
+node_modules/
+
+# Plugin data
+.superpowers/
+
+# Internal planning docs (contain local paths and personal notes)
+docs/superpowers/
+
+# Local Claude Code session settings
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets and environment
+.env
+.env.*
+
+# Logs and backups
+*.log
+*.bak
+*.backup
+
+# Job search output (user-generated, not plugin code)
+job-search/
+
+# Python venv (auto-created by ensure-deps.mjs on first run)
+mcp/.venv/
+
+# Session logs and prompt dumps
+*_prompts.md
+
+# Temporary files
+temp/

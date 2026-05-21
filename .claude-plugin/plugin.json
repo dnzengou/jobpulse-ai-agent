@@ -1,0 +1,41 @@
+{
+  "name": "jobs-for-ai-agents",
+  "description": "Your AI job-search wingman — find roles, polish your resume, research companies, tailor applications, and apply with browser assistance — all from Claude Code.",
+  "version": "0.3.0",
+  "author": {
+    "name": "JCodesMore",
+    "url": "https://github.com/JCodesMore"
+  },
+  "homepage": "https://github.com/JCodesMore/jobs-for-ai-agents",
+  "repository": "https://github.com/JCodesMore/jobs-for-ai-agents",
+  "bugs": {
+    "url": "https://github.com/JCodesMore/jobs-for-ai-agents/issues"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "jobs",
+    "resume",
+    "job-search",
+    "career",
+    "mcp",
+    "claude-code"
+  ],
+  "mcpServers": {
+    "jobspy": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/start-mcp.mjs"]
+    }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/ensure-deps.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

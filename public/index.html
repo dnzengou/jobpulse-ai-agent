@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobPulse AI Agent — Find, research, and apply to jobs from Claude</title>
+  <meta name="description" content="AI-powered job search agent for Claude Code. Searches 8 job boards, customizes your resume, researches companies, writes cover letters, and helps you apply — all from your terminal." />
+  <meta property="og:title" content="JobPulse AI Agent" />
+  <meta property="og:description" content="Find, research, and apply to jobs without leaving Claude Code." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0a0f;
+      --surface:  #13131a;
+      --border:   #1e1e2e;
+      --accent:   #7c3aed;
+      --accent2:  #06b6d4;
+      --text:     #e2e8f0;
+      --muted:    #64748b;
+      --green:    #10b981;
+      --yellow:   #f59e0b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #fff; padding: 0.45rem 1.1rem;
+      border-radius: 6px; font-size: 0.875rem; font-weight: 600;
+      text-decoration: none; transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3);
+      color: #a78bfa; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.15rem; color: var(--muted); max-width: 540px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: #fff; padding: 0.75rem 1.75rem;
+      border-radius: 8px; font-size: 1rem; font-weight: 600;
+      text-decoration: none; transition: opacity .2s, transform .15s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent; color: var(--text); padding: 0.75rem 1.75rem;
+      border-radius: 8px; font-size: 1rem; font-weight: 500; border: 1px solid var(--border);
+      text-decoration: none; transition: border-color .2s, transform .15s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-secondary:hover { border-color: var(--muted); transform: translateY(-1px); }
+
+    /* ── Terminal demo ── */
+    .terminal-wrap { max-width: 680px; margin: 4rem auto 0; padding: 0 1rem; }
+    .terminal {
+      background: #0d0d14; border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    }
+    .terminal-bar {
+      background: #1a1a26; padding: 0.75rem 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+    .terminal-title { flex: 1; text-align: center; font-size: 0.8rem; color: var(--muted); }
+    .terminal-body { padding: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.8; }
+    .t-prompt { color: #10b981; }
+    .t-cmd { color: #e2e8f0; }
+    .t-comment { color: #475569; }
+    .t-output { color: #94a3b8; }
+    .t-accent { color: #a78bfa; }
+    .t-cyan { color: #06b6d4; }
+    .t-yellow { color: #f59e0b; }
+    .t-green { color: #10b981; }
+
+    /* ── Section ── */
+    section { padding: 5rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent2); margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800;
+      letter-spacing: -0.03em; margin-bottom: 1rem;
+    }
+    .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 540px; }
+
+    /* ── Flow steps ── */
+    .flow { display: grid; gap: 1.5rem; margin-top: 3rem; }
+    .flow-step {
+      display: grid; grid-template-columns: 48px 1fr;
+      gap: 1.25rem; align-items: start;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      transition: border-color .2s;
+    }
+    .flow-step:hover { border-color: rgba(124,58,237,0.4); }
+    .step-num {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.1rem; color: #a78bfa; flex-shrink: 0;
+    }
+    .flow-step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .flow-step p { font-size: 0.9rem; color: var(--muted); }
+
+    /* ── Features grid ── */
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; margin-top: 3rem; }
+    .feature {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      transition: border-color .2s, transform .15s;
+    }
+    .feature:hover { border-color: rgba(124,58,237,0.4); transform: translateY(-2px); }
+    .feature-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+    .feature h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .feature p { font-size: 0.875rem; color: var(--muted); }
+
+    /* ── Boards ── */
+    .boards { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+    .board-chip {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.4rem 0.9rem;
+      font-size: 0.85rem; font-weight: 500;
+    }
+
+    /* ── Install block ── */
+    .install-block {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; max-width: 640px; margin-top: 2.5rem;
+    }
+    .install-tab {
+      display: flex; border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 500;
+      color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+    }
+    .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+    .install-code { padding: 1.25rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; }
+    .install-code .line { display: flex; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .install-code .prompt { color: var(--green); user-select: none; }
+    .install-code .code { color: var(--text); }
+
+    /* ── Stats strip ── */
+    .stats {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem;
+      padding: 3rem 2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2.2rem; font-weight: 800; color: var(--text); }
+    .stat-label { font-size: 0.875rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* ── CTA banner ── */
+    .cta-banner {
+      text-align: center; padding: 5rem 2rem;
+      background: radial-gradient(ellipse at center, rgba(124,58,237,0.12) 0%, transparent 70%);
+    }
+    .cta-banner h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1rem; }
+    .cta-banner p { color: var(--muted); font-size: 1.05rem; margin-bottom: 2rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 2rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      color: var(--muted); font-size: 0.85rem;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 1.5rem; }
+
+    @media (max-width: 640px) {
+      nav { padding: 1rem; }
+      .nav-links { display: none; }
+      .hero { padding: 4rem 1.25rem 3rem; }
+      .flow-step { grid-template-columns: 1fr; }
+      .step-num { width: 40px; height: 40px; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <div class="nav-logo">Job<span>Pulse</span> AI</div>
+  <ul class="nav-links">
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank">GitHub</a></li>
+  </ul>
+  <a class="nav-cta" href="#install">Get started free →</a>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero" style="max-width:800px">
+  <div class="hero-badge">🤖 Claude Code Plugin · v0.3.1 · Open Source</div>
+  <h1>Your AI job-search<br/><span class="grad">command center</span></h1>
+  <p>
+    Search 8 job boards, get company research, customize your resume,
+    generate cover letters, prep for interviews — and optionally apply —
+    all from a single Claude command.
+  </p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#install">Install the plugin →</a>
+    <a class="btn-secondary" href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank">
+      ★ View on GitHub
+    </a>
+  </div>
+</section>
+
+<!-- ── Terminal ── -->
+<div class="terminal-wrap">
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      <div class="terminal-title">Claude Code — JobPulse AI Agent</div>
+    </div>
+    <div class="terminal-body">
+      <div><span class="t-prompt">❯</span> <span class="t-cmd">/findmeajob</span></div>
+      <div class="t-output">&nbsp;</div>
+      <div><span class="t-accent">JobPulse</span> <span class="t-output">What role are you looking for?</span></div>
+      <div><span class="t-output">›</span> <span class="t-cmd">Remote senior AI engineer, Europe</span></div>
+      <div class="t-output">&nbsp;</div>
+      <div><span class="t-green">✓</span> <span class="t-output">Running 6 queries across Indeed, LinkedIn, Google Jobs...</span></div>
+      <div><span class="t-green">✓</span> <span class="t-output">296 results → dedupe → filter → score</span></div>
+      <div><span class="t-green">✓</span> <span class="t-output">Researching Acme Corp (Glassdoor · LinkedIn · GitHub)...</span></div>
+      <div><span class="t-green">✓</span> <span class="t-output">Customizing resume for Acme Corp JD...</span></div>
+      <div><span class="t-green">✓</span> <span class="t-output">Writing cover letter (238 words)...</span></div>
+      <div><span class="t-green">✓</span> <span class="t-output">Generating interview prep guide...</span></div>
+      <div class="t-output">&nbsp;</div>
+      <div><span class="t-yellow">📦</span> <span class="t-cyan">Application package ready</span> <span class="t-output">→ job-search/acme-corp/</span></div>
+      <div class="t-output">&nbsp;</div>
+      <div><span class="t-accent">JobPulse</span> <span class="t-output">Want me to open the application form?</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Stats ── -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">8</div><div class="stat-label">Job boards scraped</div></div>
+  <div class="stat"><div class="stat-num">6</div><div class="stat-label">AI agents working for you</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Local — your data stays yours</div></div>
+  <div class="stat"><div class="stat-num">$0</div><div class="stat-label">No API keys needed</div></div>
+</div>
+
+<!-- ── How it works ── -->
+<section id="how-it-works">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">From zero to application package<br/>in one session</h2>
+    <p class="section-sub">Type <code style="background:var(--surface);padding:.15rem .4rem;border-radius:4px;font-family:monospace">/findmeajob</code> and let the agent handle the rest.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Tell it what you want</h3>
+          <p>Role, location, remote preference, salary range, experience level. One question at a time, conversational — not a form dump.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Deep multi-query search</h3>
+          <p>Generates 5–7 search variations from your profile, runs them in parallel across 8 job boards, dedupes 300+ results down to a scored shortlist.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Company research</h3>
+          <p>For each job you select, a dedicated agent browses the company website, Glassdoor, LinkedIn, Crunchbase, and GitHub. Red flags, green flags, culture signals — all in one structured brief.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div>
+          <h3>Application package built automatically</h3>
+          <p>Customized resume (re-keyed to the JD, not fabricated), targeted 3-paragraph cover letter, interview prep guide with STAR outlines — all saved locally, ready to review.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">5</div>
+        <div>
+          <h3>Browser-assisted apply (optional)</h3>
+          <p>Say "apply to Acme Corp" and the agent opens the form, fills it field by field with your confirmation, and submits only when you say the word. Sensitive fields always flagged to you.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ── -->
+<section id="features" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything you need,<br/>nothing you don't</h2>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">🔍</div>
+        <h3>Multi-board search</h3>
+        <p>Indeed, LinkedIn, Glassdoor, ZipRecruiter, Google Jobs, Bayt, Naukri, BDJobs — in one command.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🎯</div>
+        <h3>Smart scoring</h3>
+        <p>Domain-aware scorer ranks by AI/stack/seniority/salary signals. Noise filtered before you see it.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📄</div>
+        <h3>Resume review + build</h3>
+        <p>Score your existing resume or build one from scratch. Follows real formatting and content standards — no fluff.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🏢</div>
+        <h3>Company research</h3>
+        <p>Full research brief: culture signals, tech stack, funding status, red/green flags, and customization notes for your resume.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✍️</div>
+        <h3>Cover letter writer</h3>
+        <p>3-paragraph, 200–280 words, company-specific opener, real numbers from your resume. No clichés.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🎤</div>
+        <h3>Interview prep</h3>
+        <p>Behavioral questions with STAR outlines drawn from <em>your</em> actual experience. Technical questions, and smart questions to ask them.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🌐</div>
+        <h3>Browser-assisted apply</h3>
+        <p>Navigate, fill, and submit application forms with your AI agent — one confirmation at a time. You're always in control.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <h3>100% local data</h3>
+        <p>All resumes, research, and preferences stay on your machine in <code>job-search/</code>. No telemetry, no cloud sync.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 3rem;">
+      <p class="section-label">Job boards</p>
+      <div class="boards">
+        <span class="board-chip">Indeed</span>
+        <span class="board-chip">LinkedIn</span>
+        <span class="board-chip">Glassdoor</span>
+        <span class="board-chip">ZipRecruiter</span>
+        <span class="board-chip">Google Jobs</span>
+        <span class="board-chip">Bayt</span>
+        <span class="board-chip">Naukri</span>
+        <span class="board-chip">BDJobs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Install ── -->
+<section id="install">
+  <div class="section-inner">
+    <div class="section-label">Install</div>
+    <h2 class="section-title">Up and running in 60 seconds</h2>
+    <p class="section-sub">Requires <a href="https://claude.ai/download" style="color:var(--accent2)">Claude Code</a>, Python ≥ 3.10, and Node.js ≥ 18.</p>
+
+    <div class="install-block">
+      <div class="install-tab">
+        <div class="tab active">Plugin marketplace</div>
+        <div class="tab" style="color:var(--muted)">Manual</div>
+      </div>
+      <div class="install-code">
+        <div class="line"><span class="prompt">/</span><span class="code">plugin marketplace add JCodesMore/jcodesmore-plugins</span></div>
+        <div class="line"><span class="prompt">/</span><span class="code">plugin install jobs-for-ai-agents@jcodesmore-plugins</span></div>
+        <div style="margin-top:1rem; color: #475569; font-size: 0.8rem;"># Restart Claude Code, then:</div>
+        <div class="line" style="margin-top:0.5rem"><span class="prompt">/</span><span class="code">findmeajob</span></div>
+      </div>
+    </div>
+
+    <p style="margin-top: 2rem; color: var(--muted); font-size: 0.9rem;">
+      Or clone and run directly:
+      <code style="background:var(--surface); border:1px solid var(--border); padding:.2rem .5rem; border-radius:4px; font-family:monospace; font-size:0.85rem; margin-left:.5rem;">
+        git clone https://github.com/dnzengou/jobpulse-ai-agent.git && claude --plugin-dir jobpulse-ai-agent
+      </code>
+    </p>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<div class="cta-banner">
+  <h2>Ready to find your next role?</h2>
+  <p>Free, open source, runs entirely on your machine.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#install">Install now →</a>
+    <a class="btn-secondary" href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank">★ Star on GitHub</a>
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<footer>
+  <div>
+    <span style="font-weight:600; color: var(--text)">JobPulse AI Agent</span>
+    &nbsp;·&nbsp; Apache 2.0 License
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank">GitHub</a>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md" target="_blank">Blueprint</a>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent/issues" target="_blank">Issues</a>
+  </div>
+</footer>
+
+</body>
+</html>
