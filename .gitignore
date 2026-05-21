@@ -46,3 +46,5 @@ mcp/.venv/
 
 # Temporary files
 temp/
+
+.vercel

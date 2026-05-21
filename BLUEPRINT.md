@@ -457,3 +457,68 @@ Placed in 3 positions for maximum coverage:
 | `public/index.html` | Single-file landing page (HTML + inline CSS, no build step) |
 | `vercel.json` | Routes all traffic to `public/`, security headers |
 | `netlify.toml` | Alternative deploy, `publish = "public"`, same headers |
+
+---
+
+## Live Search Results — Sweden All-Tracks (2026-05-21)
+
+*18 queries · Indeed + LinkedIn + Google · 30-day window*
+*611 raw → 450 deduped → 169 relevance-filtered → scored by track*
+
+### Search files
+| File | Purpose |
+|------|---------|
+| `job-search/search_sweden_broad.py` | 18-query Sweden broad search script |
+| `job-search/score_sweden_all_tracks.py` | All-tracks scorer (6 signal libraries + primary track assignment) |
+| `job-search/raw_sweden_broad.json` | 419 raw results from this pass |
+| `job-search/jobs-sweden-all-tracks.json` | 169 scored + ranked results |
+
+### Curated shortlist
+
+#### 🛰 Space Tech — Sweden
+| Role | Company | Location | Score | Apply |
+|------|---------|----------|-------|-------|
+| Pre-sales Solution Architect | Swedish Space Corporation | Solna | 32 | [Indeed](https://se.indeed.com/viewjob?jk=c99b52bd524a827d) |
+| Propulsion Product Manager | OHB Sweden AB | Stockholm | 24 | [Indeed](https://se.indeed.com/viewjob?jk=c339a7c26331aece) |
+| Industrialiseringsledare — Aerospace Systems | Saab | Linköping | 20 | [LinkedIn](https://www.linkedin.com/jobs/view/4411680126) |
+| Engineering Manager — Materials & Processes | GKN Aerospace | Trollhättan | 16 | [Indeed](https://se.indeed.com/viewjob?jk=3340712077c9ee59) |
+
+#### ⛓ Blockchain/Web3 — Remote from Sweden
+| Role | Company | Location | Score | Apply |
+|------|---------|----------|-------|-------|
+| Technical PM — Tether Wallet (100% Remote) | Tether Operations | Stockholm | 22 | [Indeed](https://se.indeed.com/viewjob?jk=3f73c6b429f8b833) |
+
+#### 💡 Business Innovation — Sweden
+| Role | Company | Location | Score | Apply |
+|------|---------|----------|-------|-------|
+| Customer Innovation Manager | AAK | Karlshamn | 11 | [LinkedIn](https://www.linkedin.com/jobs/view/4393491464) |
+| R&D Manager — Hardware & Mechatronics | Husqvarna | Huskvarna | 11 | [Indeed](https://se.indeed.com/viewjob?jk=d8299b1dec6eebb0) |
+
+#### 🤝 Business Development — Stockholm / Remote
+| Role | Company | Location | Remote | Score | Apply |
+|------|---------|----------|--------|-------|-------|
+| Partner Onboarding Manager | Soundtrack Your Brand | Stockholm | ✅ | 11 | [Indeed](https://se.indeed.com/viewjob?jk=d386eefd85a12889) |
+| Business Development Manager — MSP | TD SYNNEX | Solna | — | 13 | [Indeed](https://se.indeed.com/viewjob?jk=44e0828074407ddf) |
+| Nordic Business Development Manager | TD SYNNEX | Solna | — | 9 | [Indeed](https://se.indeed.com/viewjob?jk=4d83fb4183e79480) |
+| Global Head of Automotive & R&D Engineering | Luxoft | Remote, SE | ✅ | 10 | [Indeed](https://se.indeed.com/viewjob?jk=a9ffbec67e48ef21) |
+
+#### ⚗️ Deep Tech / Cloud — Stockholm
+| Role | Company | Location | Score | Apply |
+|------|---------|----------|-------|-------|
+| Principal TPM — AWS Digital Sovereignty & European Sovereign Cloud | Amazon Web Services | Stockholm | 9 | [Indeed](https://se.indeed.com/viewjob?jk=932d9689645e79a8) |
+
+### Market signal
+Board coverage for this profile in Sweden: ~25-30%. Recommended direct-outreach targets
+not currently posting: Vinnova, RISE Research Institutes, Chalmers Ventures, KTH Innovation,
+EIT InnoEnergy, Ignite Sweden, Epicenter Stockholm, SSAB R&D, Ericsson Ventures.
+
+For blockchain specifically, Sweden's web3 scene is thin on boards —
+active clusters in Stockholm: Safello, Arcane Crypto, BTSE alumni, and
+Scandinavian crypto funds (Blocklabs, Hack VC EU).
+
+### Scorer logic — `score_sweden_all_tracks.py`
+6 signal libraries scored independently per job:
+`SPACE_KW · DEEPTECH_KW · BLOCKCHAIN_KW · INNOVATION_KW · STARTUP_KW · BIZ_DEV_KW`
+Primary track = library with highest raw score. Shared bonuses: remote (+3),
+manager/director title (+2), senior/principal (+1), Sweden location (+1),
+salary ≥ $100k (+2). Penalties: junior/entry-level/trainee (−5 each).
