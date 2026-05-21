@@ -211,6 +211,7 @@ Optional paid additions: Context7 MCP (live library docs), Playwright MCP (headl
 | 0.2.0 | Deep search processor, tiered results table, setup skill |
 | 0.3.0 | search_jobs_batch tool, salary normalization, cover-letter-writer agent, interview-prepper agent, /apply skill with browser-use, hybrid/min-score flags in processor, expanded title patterns, Karpathy-style agent prompts |
 | 0.3.1 | Niche-role search patterns, custom domain scorers, two-pass strategy, European market guidance, blockchain/web3 profile support, JobSpy country limitations doc, landing page, Vercel/Netlify deploy, GitHub push |
+| 0.3.2 | Worldmonitor-inspired onboarding UX redesign: benefit-first hero, 5-metric strip, 3-step quick start with tagged steps + prereqs, live terminal demo, natural language command cards, deliverables grid with filename tags, trust signals, animated live badge. Vercel production deploy. |
 
 ---
 
@@ -227,16 +228,14 @@ Describes the plugin, shows a terminal demo, lists features, and provides instal
 ### Vercel (preferred)
 Config: `vercel.json` → serves `public/` as static output.
 
-Deploy:
+**Live URL:** https://jobpulse-ai-agent.vercel.app
+**Deployment ID:** `dpl_BMHJgc6RfwWtiPhF5iPsrJAGDg3s`
+**Region:** Washington D.C. (iad1)
+**Status:** ✅ Production — auto-deploys on every push to `main`
+
 ```bash
-# One-time
-npm i -g vercel
-vercel --prod
-
-# Or connect GitHub repo at vercel.com/new — auto-deploys on every push to main
+vercel --prod --yes   # redeploy manually
 ```
-
-Live URL pattern: `https://jobpulse-ai-agent.vercel.app`
 
 ### Netlify (alternative)
 Config: `netlify.toml` → `publish = "public"`.
@@ -395,3 +394,66 @@ queries_track_b = [
 Separate scorers per track → separate ranked lists → present in two sections.
 Overlap (roles touching both: "blockchain space data", "web3 deep tech") surfaces
 naturally from cross-track scoring.
+
+---
+
+## Landing Page — Onboarding UX Design System
+
+*Inspired by worldmonitor-core.vercel.app. Live at https://jobpulse-ai-agent.vercel.app*
+
+### Design principles applied
+
+| Principle | Implementation |
+|-----------|---------------|
+| **Benefit-first** | Hero headline leads with outcome ("entire job hunt"), not features |
+| **Friction signals upfront** | "No API keys · Your data stays local · Free · Runs in Claude Code" in hero |
+| **Quantified credibility** | 5-metric strip (8 boards, 6 agents, 100% local, $0, 60s) immediately below hero |
+| **Single CTA per section** | One primary action per scroll stop — no competing buttons |
+| **Specificity over vagueness** | Named boards (Indeed, LinkedIn…), named agents, named output files |
+| **Privacy reassurance** | Repeated: "your data stays local", "no cloud sync", "no telemetry" |
+
+### Page sections (scroll order)
+
+```
+1. Nav          — sticky, logo + 4 links + pill CTA
+2. Hero         — animated badge, h1, sub, trust line, 2 CTAs
+3. Metric strip — 5 quantified numbers (boards, agents, local, cost, speed)
+4. Quick start  — 3 tagged steps (Install / Setup / Go) with code blocks + prereqs
+5. Terminal     — live demo of a full /findmeajob session
+6. Try it       — 6 natural-language command cards with descriptions
+7. Deliverables — 6 output cards with filename tags
+8. Boards strip — 8 job board chips
+9. CTA final    — repeat CTA with trust footer
+10. Footer      — license, links
+```
+
+### Quick start step pattern
+
+Each step uses a **tag + heading + explanation + code block** structure:
+
+```
+[INSTALL tag]  Step heading
+               Explanation (why, not just what)
+               > code block (copy-paste ready)
+               Note (prerequisites / what to expect)
+```
+
+Tags: `INSTALL` (green) · `SETUP` (yellow) · `GO` (purple)
+
+This pattern comes from worldmonitor: low cognitive load, clear progression,
+no ambiguity about what to do next.
+
+### Trust signal placement
+
+Placed in 3 positions for maximum coverage:
+1. **Hero trust line** — small icons + text just above CTAs
+2. **Metric strip** — "100% Local" and "$0" as hard numbers
+3. **CTA footer line** — "Apache 2.0 · No telemetry · No cloud sync · Your data stays yours"
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `public/index.html` | Single-file landing page (HTML + inline CSS, no build step) |
+| `vercel.json` | Routes all traffic to `public/`, security headers |
+| `netlify.toml` | Alternative deploy, `publish = "public"`, same headers |
