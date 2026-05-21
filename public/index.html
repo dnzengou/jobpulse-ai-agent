@@ -1,466 +1,589 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JobPulse AI Agent — Find, research, and apply to jobs from Claude</title>
-  <meta name="description" content="AI-powered job search agent for Claude Code. Searches 8 job boards, customizes your resume, researches companies, writes cover letters, and helps you apply — all from your terminal." />
-  <meta property="og:title" content="JobPulse AI Agent" />
-  <meta property="og:description" content="Find, research, and apply to jobs without leaving Claude Code." />
-  <meta property="og:type" content="website" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>JobPulse AI Agent — Find, apply, and land your next role from Claude</title>
+  <meta name="description" content="AI job-search agent for Claude Code. Searches 8 boards, customizes your resume, writes cover letters, preps interviews, and fills applications — 100% local, no API keys."/>
+  <meta property="og:title" content="JobPulse AI Agent"/>
+  <meta property="og:description" content="Find, research, and apply to jobs without leaving Claude Code. No API keys. Your data stays local."/>
+  <meta property="og:type" content="website"/>
+  <meta name="theme-color" content="#0a0a0f"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0a0a0f;--surface:#111118;--surface2:#16161f;--border:#1c1c2a;
+      --accent:#7c3aed;--accent-light:#a78bfa;--accent-glow:rgba(124,58,237,.18);
+      --cyan:#06b6d4;--cyan-glow:rgba(6,182,212,.15);
+      --green:#10b981;--yellow:#f59e0b;--red:#ef4444;
+      --text:#e2e8f0;--muted:#64748b;--muted2:#475569;
+      --radius:10px;--radius-lg:16px;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
 
-    :root {
-      --bg:       #0a0a0f;
-      --surface:  #13131a;
-      --border:   #1e1e2e;
-      --accent:   #7c3aed;
-      --accent2:  #06b6d4;
-      --text:     #e2e8f0;
-      --muted:    #64748b;
-      --green:    #10b981;
-      --yellow:   #f59e0b;
+    /* ─── NAV ─────────────────────────────────────────── */
+    nav{
+      position:sticky;top:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:.85rem 2rem;
+      background:rgba(10,10,15,.88);backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+    }
+    .logo{font-weight:800;font-size:1.05rem;letter-spacing:-.03em;text-decoration:none;color:var(--text)}
+    .logo em{color:var(--accent-light);font-style:normal}
+    .nav-links{display:flex;gap:1.75rem;list-style:none}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .15s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-pill{
+      background:var(--accent);color:#fff;padding:.4rem 1rem;
+      border-radius:99px;font-size:.82rem;font-weight:700;text-decoration:none;
+      letter-spacing:.01em;transition:opacity .15s,transform .1s
+    }
+    .nav-pill:hover{opacity:.88;transform:translateY(-1px)}
+
+    /* ─── HERO ────────────────────────────────────────── */
+    .hero{
+      text-align:center;padding:5.5rem 1.5rem 3.5rem;
+      max-width:780px;margin:0 auto;
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:.45rem;
+      background:var(--accent-glow);border:1px solid rgba(124,58,237,.28);
+      color:var(--accent-light);font-size:.75rem;font-weight:700;
+      letter-spacing:.06em;text-transform:uppercase;
+      padding:.28rem .9rem;border-radius:99px;margin-bottom:1.6rem;
+    }
+    .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    h1{
+      font-size:clamp(2.4rem,6vw,4.2rem);font-weight:900;
+      letter-spacing:-.04em;line-height:1.08;margin-bottom:1.2rem;
+    }
+    .h1-grad{
+      background:linear-gradient(135deg,#a78bfa 0%,#7c3aed 40%,#06b6d4 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .hero-sub{
+      font-size:1.1rem;color:var(--muted);max-width:500px;
+      margin:0 auto 2rem;line-height:1.65;
+    }
+    .trust-line{
+      display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+      gap:.5rem 1.25rem;margin-bottom:2.5rem;font-size:.82rem;color:var(--muted2);
+    }
+    .trust-item{display:flex;align-items:center;gap:.35rem}
+    .trust-item svg{color:var(--green);flex-shrink:0}
+    .hero-ctas{display:flex;gap:.875rem;justify-content:center;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:.45rem;
+      padding:.72rem 1.6rem;border-radius:var(--radius);font-size:.95rem;
+      font-weight:600;text-decoration:none;transition:all .15s;white-space:nowrap;
+    }
+    .btn-primary{background:var(--accent);color:#fff;box-shadow:0 0 24px var(--accent-glow)}
+    .btn-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 4px 28px rgba(124,58,237,.35)}
+    .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+    .btn-ghost:hover{border-color:var(--muted2);transform:translateY(-1px)}
+
+    /* ─── METRIC STRIP ────────────────────────────────── */
+    .metrics{
+      display:flex;flex-wrap:wrap;justify-content:center;gap:0;
+      border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+      margin:0;
+    }
+    .metric{
+      flex:1;min-width:140px;text-align:center;padding:1.6rem 1rem;
+      border-right:1px solid var(--border);
+    }
+    .metric:last-child{border-right:none}
+    .metric-num{font-size:2rem;font-weight:900;letter-spacing:-.04em;color:var(--text)}
+    .metric-num.accent{color:var(--accent-light)}
+    .metric-num.cyan{color:var(--cyan)}
+    .metric-num.green{color:var(--green)}
+    .metric-label{font-size:.78rem;color:var(--muted);margin-top:.25rem;font-weight:500}
+
+    /* ─── QUICK START ─────────────────────────────────── */
+    .qs-wrap{max-width:820px;margin:0 auto;padding:5rem 1.5rem}
+    .section-eyebrow{
+      font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--cyan);margin-bottom:.65rem;
+    }
+    .section-h{font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.6rem}
+    .section-sub{color:var(--muted);font-size:1rem;margin-bottom:2.8rem;max-width:480px}
+
+    .steps{display:flex;flex-direction:column;gap:.75rem}
+    .step{
+      display:grid;grid-template-columns:48px 1fr;gap:1.25rem;
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:1.4rem 1.5rem;
+      transition:border-color .2s,box-shadow .2s;
+      position:relative;overflow:hidden;
+    }
+    .step::before{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(135deg,var(--accent-glow) 0%,transparent 60%);
+      opacity:0;transition:opacity .2s;pointer-events:none;
+    }
+    .step:hover{border-color:rgba(124,58,237,.35);box-shadow:0 4px 24px rgba(0,0,0,.25)}
+    .step:hover::before{opacity:1}
+    .step-num{
+      width:48px;height:48px;border-radius:12px;flex-shrink:0;
+      background:var(--accent-glow);border:1px solid rgba(124,58,237,.28);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:1.1rem;color:var(--accent-light);
+    }
+    .step-body h3{font-size:.95rem;font-weight:700;margin-bottom:.3rem}
+    .step-body p{font-size:.875rem;color:var(--muted);margin-bottom:.75rem;line-height:1.55}
+    .code-block{
+      background:#0c0c13;border:1px solid var(--border);border-radius:8px;
+      padding:.7rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;
+      display:flex;align-items:center;gap:.6rem;overflow-x:auto;
+    }
+    .code-block .prompt{color:var(--green);user-select:none;flex-shrink:0}
+    .code-block .cmd{color:var(--text)}
+    .code-block .comment{color:var(--muted2)}
+    .step-tag{
+      display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.06em;
+      text-transform:uppercase;padding:.15rem .5rem;border-radius:4px;margin-bottom:.5rem;
+    }
+    .tag-install{background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.25)}
+    .tag-config{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.25)}
+    .tag-go{background:rgba(124,58,237,.15);color:var(--accent-light);border:1px solid rgba(124,58,237,.28)}
+
+    /* ─── TERMINAL DEMO ───────────────────────────────── */
+    .demo-wrap{
+      max-width:760px;margin:0 auto;padding:0 1.5rem 5rem;
+    }
+    .terminal{
+      background:#0b0b12;border:1px solid var(--border);
+      border-radius:var(--radius-lg);overflow:hidden;
+      box-shadow:0 32px 64px rgba(0,0,0,.55),0 0 0 1px rgba(124,58,237,.08);
+    }
+    .term-bar{
+      background:#13131e;padding:.7rem 1rem;
+      display:flex;align-items:center;gap:.5rem;
+      border-bottom:1px solid var(--border);
+    }
+    .dot{width:11px;height:11px;border-radius:50%}
+    .dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+    .term-title{flex:1;text-align:center;font-size:.75rem;color:var(--muted2);font-family:'JetBrains Mono',monospace}
+    .term-body{padding:1.4rem 1.5rem;font-family:'JetBrains Mono',monospace;font-size:.825rem;line-height:1.9}
+    .t-p{color:var(--green)}.t-c{color:var(--text)}.t-o{color:#94a3b8}
+    .t-a{color:var(--accent-light)}.t-cy{color:var(--cyan)}.t-y{color:var(--yellow)}
+    .t-g{color:var(--green)}.t-dim{color:var(--muted2)}
+
+    /* ─── TRY IT ──────────────────────────────────────── */
+    .tryit-wrap{
+      background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+      padding:4rem 1.5rem;
+    }
+    .tryit-inner{max-width:900px;margin:0 auto}
+    .commands{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.75rem;margin-top:2rem}
+    .cmd-card{
+      background:var(--bg);border:1px solid var(--border);
+      border-radius:var(--radius);padding:1.1rem 1.25rem;
+      display:flex;flex-direction:column;gap:.5rem;
+      transition:border-color .2s,transform .15s;cursor:default;
+    }
+    .cmd-card:hover{border-color:rgba(6,182,212,.35);transform:translateY(-2px)}
+    .cmd-quote{font-size:.875rem;color:var(--text);font-style:italic;line-height:1.5}
+    .cmd-desc{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+    .cmd-tag{
+      display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.05em;
+      text-transform:uppercase;padding:.12rem .45rem;border-radius:4px;
+      background:var(--accent-glow);color:var(--accent-light);border:1px solid rgba(124,58,237,.22);
+      width:fit-content;
     }
 
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
+    /* ─── WHAT YOU GET ────────────────────────────────── */
+    .deliverables-wrap{max-width:1000px;margin:0 auto;padding:5rem 1.5rem}
+    .del-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:2.5rem}
+    .del-card{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:1.4rem;
+      transition:border-color .2s,transform .15s;
+    }
+    .del-card:hover{border-color:rgba(124,58,237,.3);transform:translateY(-2px)}
+    .del-icon{font-size:1.6rem;margin-bottom:.65rem}
+    .del-card h3{font-size:.92rem;font-weight:700;margin-bottom:.35rem}
+    .del-card p{font-size:.82rem;color:var(--muted);line-height:1.55}
+    .del-file{
+      margin-top:.65rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;
+      color:var(--cyan);background:rgba(6,182,212,.08);
+      border:1px solid rgba(6,182,212,.18);border-radius:5px;
+      padding:.2rem .5rem;display:inline-block;
     }
 
-    /* ── Nav ── */
-    nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1rem 2rem;
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(10,10,15,0.92);
-      backdrop-filter: blur(12px);
+    /* ─── BOARDS ──────────────────────────────────────── */
+    .boards-strip{
+      text-align:center;padding:3rem 1.5rem;
+      border-top:1px solid var(--border);
     }
-    .nav-logo { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; }
-    .nav-logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color .2s; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-cta {
-      background: var(--accent); color: #fff; padding: 0.45rem 1.1rem;
-      border-radius: 6px; font-size: 0.875rem; font-weight: 600;
-      text-decoration: none; transition: opacity .2s;
+    .boards-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:1rem}
+    .boards{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem}
+    .board{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:6px;padding:.35rem .85rem;
+      font-size:.82rem;font-weight:500;color:var(--muted);
+      transition:color .15s,border-color .15s;
     }
-    .nav-cta:hover { opacity: 0.88; }
+    .board:hover{color:var(--text);border-color:var(--muted2)}
 
-    /* ── Hero ── */
-    .hero {
-      text-align: center;
-      padding: 6rem 2rem 4rem;
-      max-width: 760px;
-      margin: 0 auto;
+    /* ─── CTA FINAL ───────────────────────────────────── */
+    .cta-final{
+      text-align:center;padding:6rem 1.5rem;
+      background:radial-gradient(ellipse 80% 60% at 50% 100%,var(--accent-glow) 0%,transparent 70%);
     }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3);
-      color: #a78bfa; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
-      text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 999px;
-      margin-bottom: 1.5rem;
-    }
-    .hero h1 {
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.12;
-      margin-bottom: 1.25rem;
-    }
-    .hero h1 .grad {
-      background: linear-gradient(135deg, #7c3aed, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero p {
-      font-size: 1.15rem; color: var(--muted); max-width: 540px;
-      margin: 0 auto 2.5rem;
-    }
-    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .btn-primary {
-      background: var(--accent); color: #fff; padding: 0.75rem 1.75rem;
-      border-radius: 8px; font-size: 1rem; font-weight: 600;
-      text-decoration: none; transition: opacity .2s, transform .15s;
-      display: inline-flex; align-items: center; gap: 0.5rem;
-    }
-    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-secondary {
-      background: transparent; color: var(--text); padding: 0.75rem 1.75rem;
-      border-radius: 8px; font-size: 1rem; font-weight: 500; border: 1px solid var(--border);
-      text-decoration: none; transition: border-color .2s, transform .15s;
-      display: inline-flex; align-items: center; gap: 0.5rem;
-    }
-    .btn-secondary:hover { border-color: var(--muted); transform: translateY(-1px); }
+    .cta-final h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;letter-spacing:-.04em;margin-bottom:.75rem}
+    .cta-final p{color:var(--muted);font-size:1rem;margin-bottom:2rem}
+    .cta-sub{font-size:.8rem;color:var(--muted2);margin-top:1rem}
 
-    /* ── Terminal demo ── */
-    .terminal-wrap { max-width: 680px; margin: 4rem auto 0; padding: 0 1rem; }
-    .terminal {
-      background: #0d0d14; border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    /* ─── FOOTER ──────────────────────────────────────── */
+    footer{
+      border-top:1px solid var(--border);padding:1.5rem 2rem;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+      font-size:.8rem;color:var(--muted);
     }
-    .terminal-bar {
-      background: #1a1a26; padding: 0.75rem 1rem;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
-    .terminal-title { flex: 1; text-align: center; font-size: 0.8rem; color: var(--muted); }
-    .terminal-body { padding: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.8; }
-    .t-prompt { color: #10b981; }
-    .t-cmd { color: #e2e8f0; }
-    .t-comment { color: #475569; }
-    .t-output { color: #94a3b8; }
-    .t-accent { color: #a78bfa; }
-    .t-cyan { color: #06b6d4; }
-    .t-yellow { color: #f59e0b; }
-    .t-green { color: #10b981; }
+    footer a{color:var(--muted);text-decoration:none;transition:color .15s}
+    footer a:hover{color:var(--text)}
+    .footer-links{display:flex;gap:1.5rem}
 
-    /* ── Section ── */
-    section { padding: 5rem 2rem; }
-    .section-inner { max-width: 1100px; margin: 0 auto; }
-    .section-label {
-      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--accent2); margin-bottom: 0.75rem;
-    }
-    .section-title {
-      font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800;
-      letter-spacing: -0.03em; margin-bottom: 1rem;
-    }
-    .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 540px; }
-
-    /* ── Flow steps ── */
-    .flow { display: grid; gap: 1.5rem; margin-top: 3rem; }
-    .flow-step {
-      display: grid; grid-template-columns: 48px 1fr;
-      gap: 1.25rem; align-items: start;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.5rem;
-      transition: border-color .2s;
-    }
-    .flow-step:hover { border-color: rgba(124,58,237,0.4); }
-    .step-num {
-      width: 48px; height: 48px; border-radius: 12px;
-      background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 1.1rem; color: #a78bfa; flex-shrink: 0;
-    }
-    .flow-step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.35rem; }
-    .flow-step p { font-size: 0.9rem; color: var(--muted); }
-
-    /* ── Features grid ── */
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; margin-top: 3rem; }
-    .feature {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.5rem;
-      transition: border-color .2s, transform .15s;
-    }
-    .feature:hover { border-color: rgba(124,58,237,0.4); transform: translateY(-2px); }
-    .feature-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
-    .feature h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
-    .feature p { font-size: 0.875rem; color: var(--muted); }
-
-    /* ── Boards ── */
-    .boards { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
-    .board-chip {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 6px; padding: 0.4rem 0.9rem;
-      font-size: 0.85rem; font-weight: 500;
-    }
-
-    /* ── Install block ── */
-    .install-block {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden; max-width: 640px; margin-top: 2.5rem;
-    }
-    .install-tab {
-      display: flex; border-bottom: 1px solid var(--border);
-    }
-    .tab {
-      padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 500;
-      color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
-    }
-    .tab.active { color: var(--text); border-bottom-color: var(--accent); }
-    .install-code { padding: 1.25rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; }
-    .install-code .line { display: flex; gap: 0.75rem; margin-bottom: 0.5rem; }
-    .install-code .prompt { color: var(--green); user-select: none; }
-    .install-code .code { color: var(--text); }
-
-    /* ── Stats strip ── */
-    .stats {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem;
-      padding: 3rem 2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    }
-    .stat { text-align: center; }
-    .stat-num { font-size: 2.2rem; font-weight: 800; color: var(--text); }
-    .stat-label { font-size: 0.875rem; color: var(--muted); margin-top: 0.25rem; }
-
-    /* ── CTA banner ── */
-    .cta-banner {
-      text-align: center; padding: 5rem 2rem;
-      background: radial-gradient(ellipse at center, rgba(124,58,237,0.12) 0%, transparent 70%);
-    }
-    .cta-banner h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1rem; }
-    .cta-banner p { color: var(--muted); font-size: 1.05rem; margin-bottom: 2rem; }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid var(--border); padding: 2rem;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
-      color: var(--muted); font-size: 0.85rem;
-    }
-    footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--text); }
-    .footer-links { display: flex; gap: 1.5rem; }
-
-    @media (max-width: 640px) {
-      nav { padding: 1rem; }
-      .nav-links { display: none; }
-      .hero { padding: 4rem 1.25rem 3rem; }
-      .flow-step { grid-template-columns: 1fr; }
-      .step-num { width: 40px; height: 40px; }
-      footer { flex-direction: column; align-items: flex-start; }
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media(max-width:640px){
+      nav{padding:.8rem 1rem}
+      .nav-links{display:none}
+      .metric{min-width:110px}
+      .metric-num{font-size:1.6rem}
+      .step{grid-template-columns:1fr}
+      .step-num{width:40px;height:40px;font-size:.95rem}
+      footer{flex-direction:column}
     }
   </style>
 </head>
 <body>
 
-<!-- ── Nav ── -->
+<!-- ═══ NAV ═══════════════════════════════════════════════ -->
 <nav>
-  <div class="nav-logo">Job<span>Pulse</span> AI</div>
+  <a class="logo" href="#">Job<em>Pulse</em> <span style="color:var(--muted);font-weight:400;font-size:.85rem">AI Agent</span></a>
   <ul class="nav-links">
-    <li><a href="#how-it-works">How it works</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#install">Install</a></li>
-    <li><a href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank">GitHub</a></li>
+    <li><a href="#quickstart">Quick start</a></li>
+    <li><a href="#tryit">Try it</a></li>
+    <li><a href="#deliverables">What you get</a></li>
+    <li><a href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
-  <a class="nav-cta" href="#install">Get started free →</a>
+  <a class="nav-pill" href="#quickstart">Get started →</a>
 </nav>
 
-<!-- ── Hero ── -->
-<section class="hero" style="max-width:800px">
-  <div class="hero-badge">🤖 Claude Code Plugin · v0.3.1 · Open Source</div>
-  <h1>Your AI job-search<br/><span class="grad">command center</span></h1>
-  <p>
-    Search 8 job boards, get company research, customize your resume,
-    generate cover letters, prep for interviews — and optionally apply —
-    all from a single Claude command.
+<!-- ═══ HERO ══════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="badge">
+    <span class="badge-dot"></span>
+    v0.3.1 &nbsp;·&nbsp; Open Source &nbsp;·&nbsp; Claude Code Plugin
+  </div>
+
+  <h1>Your AI agent for<br/><span class="h1-grad">the entire job hunt</span></h1>
+
+  <p class="hero-sub">
+    One command. 8 job boards searched, companies researched, resume tailored,
+    cover letter written, interviews prepped — and applications filed.
   </p>
-  <div class="hero-actions">
-    <a class="btn-primary" href="#install">Install the plugin →</a>
-    <a class="btn-secondary" href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank">
-      ★ View on GitHub
+
+  <div class="trust-line">
+    <span class="trust-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M13 4L6.5 11 3 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      No API keys required
+    </span>
+    <span class="trust-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M13 4L6.5 11 3 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Your data stays local
+    </span>
+    <span class="trust-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M13 4L6.5 11 3 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Free to use
+    </span>
+    <span class="trust-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M13 4L6.5 11 3 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Runs inside Claude Code
+    </span>
+  </div>
+
+  <div class="hero-ctas">
+    <a class="btn btn-primary" href="#quickstart">Get started in 60s →</a>
+    <a class="btn btn-ghost" href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      View on GitHub
     </a>
   </div>
-</section>
+</div>
 
-<!-- ── Terminal ── -->
-<div class="terminal-wrap">
+<!-- ═══ METRIC STRIP ══════════════════════════════════════ -->
+<div class="metrics">
+  <div class="metric"><div class="metric-num accent">8</div><div class="metric-label">Job boards scraped</div></div>
+  <div class="metric"><div class="metric-num cyan">6</div><div class="metric-label">AI agents on your team</div></div>
+  <div class="metric"><div class="metric-num green">100%</div><div class="metric-label">Local — zero cloud sync</div></div>
+  <div class="metric"><div class="metric-num" style="color:var(--yellow)">$0</div><div class="metric-label">Extra API cost</div></div>
+  <div class="metric"><div class="metric-num" style="color:var(--text)">60s</div><div class="metric-label">To first results</div></div>
+</div>
+
+<!-- ═══ QUICK START ═══════════════════════════════════════ -->
+<div class="qs-wrap" id="quickstart">
+  <div class="section-eyebrow">Quick start</div>
+  <h2 class="section-h">Up and running in three steps</h2>
+  <p class="section-sub">Requires <a href="https://claude.ai/download" style="color:var(--cyan)" target="_blank" rel="noopener">Claude Code</a>, Python ≥ 3.10, Node.js ≥ 18. No accounts, no API keys.</p>
+
+  <div class="steps">
+
+    <!-- Step 1 -->
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <span class="step-tag tag-install">Install</span>
+        <h3>Install the plugin from the marketplace</h3>
+        <p>Inside Claude Code, run these two commands. Dependencies install automatically in the background — Python venv, JobSpy, pandas.</p>
+        <div class="code-block">
+          <span class="prompt">/</span>
+          <span class="cmd">plugin marketplace add JCodesMore/jcodesmore-plugins</span>
+        </div>
+        <div class="code-block" style="margin-top:.45rem">
+          <span class="prompt">/</span>
+          <span class="cmd">plugin install jobs-for-ai-agents@jcodesmore-plugins</span>
+        </div>
+        <p style="margin-top:.6rem;font-size:.78rem;color:var(--muted2)">
+          Or clone and run locally:
+          <code style="font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.04);padding:.1rem .35rem;border-radius:4px;font-size:.76rem">
+            claude --plugin-dir /path/to/jobpulse-ai-agent
+          </code>
+        </p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <span class="step-tag tag-config">Setup</span>
+        <h3>Restart Claude Code</h3>
+        <p>Fully quit and reopen Claude Code. The plugin registers on startup and runs a one-time dependency check — this takes about 30 seconds on first launch.</p>
+        <div class="code-block">
+          <span class="cmd" style="color:var(--muted)">⌘Q / Alt+F4 → reopen Claude Code</span>
+        </div>
+        <p style="margin-top:.6rem;font-size:.78rem;color:var(--muted2)">
+          You'll see <code style="font-family:'JetBrains Mono',monospace;font-size:.76rem;background:rgba(255,255,255,.04);padding:.1rem .35rem;border-radius:4px">[jobfinder] Dependencies ready.</code> in the startup log when it's done.
+        </p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <span class="step-tag tag-go">Go</span>
+        <h3>Start your search</h3>
+        <p>Type the slash command or just describe what you want in plain language. The agent guides you through the rest — one question at a time, no form to fill.</p>
+        <div class="code-block">
+          <span class="prompt">/</span>
+          <span class="cmd">findmeajob</span>
+        </div>
+        <p style="margin-top:.45rem;font-size:.78rem;color:var(--muted2)">
+          Or just tell Claude naturally: <em style="color:var(--muted)">"Find me remote AI engineer jobs in Europe"</em>
+        </p>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- Prereqs note -->
+  <div style="margin-top:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;display:flex;gap:.75rem;align-items:flex-start">
+    <span style="font-size:1rem;flex-shrink:0">💡</span>
+    <div style="font-size:.82rem;color:var(--muted);line-height:1.6">
+      <strong style="color:var(--text)">First run checklist:</strong>
+      &nbsp;
+      <a href="https://claude.ai/download" style="color:var(--cyan)" target="_blank" rel="noopener">Claude Code</a> installed
+      &nbsp;·&nbsp;
+      <a href="https://www.python.org/downloads/" style="color:var(--cyan)" target="_blank" rel="noopener">Python 3.10+</a> on your PATH
+      &nbsp;·&nbsp;
+      <a href="https://nodejs.org" style="color:var(--cyan)" target="_blank" rel="noopener">Node.js 18+</a> installed
+      &nbsp;·&nbsp;
+      A working directory (the plugin writes to <code style="font-family:'JetBrains Mono',monospace;font-size:.76rem">job-search/</code> inside it)
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TERMINAL DEMO ═════════════════════════════════════ -->
+<div class="demo-wrap">
   <div class="terminal">
-    <div class="terminal-bar">
-      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-      <div class="terminal-title">Claude Code — JobPulse AI Agent</div>
+    <div class="term-bar">
+      <div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div>
+      <div class="term-title">claude — JobPulse AI Agent demo</div>
     </div>
-    <div class="terminal-body">
-      <div><span class="t-prompt">❯</span> <span class="t-cmd">/findmeajob</span></div>
-      <div class="t-output">&nbsp;</div>
-      <div><span class="t-accent">JobPulse</span> <span class="t-output">What role are you looking for?</span></div>
-      <div><span class="t-output">›</span> <span class="t-cmd">Remote senior AI engineer, Europe</span></div>
-      <div class="t-output">&nbsp;</div>
-      <div><span class="t-green">✓</span> <span class="t-output">Running 6 queries across Indeed, LinkedIn, Google Jobs...</span></div>
-      <div><span class="t-green">✓</span> <span class="t-output">296 results → dedupe → filter → score</span></div>
-      <div><span class="t-green">✓</span> <span class="t-output">Researching Acme Corp (Glassdoor · LinkedIn · GitHub)...</span></div>
-      <div><span class="t-green">✓</span> <span class="t-output">Customizing resume for Acme Corp JD...</span></div>
-      <div><span class="t-green">✓</span> <span class="t-output">Writing cover letter (238 words)...</span></div>
-      <div><span class="t-green">✓</span> <span class="t-output">Generating interview prep guide...</span></div>
-      <div class="t-output">&nbsp;</div>
-      <div><span class="t-yellow">📦</span> <span class="t-cyan">Application package ready</span> <span class="t-output">→ job-search/acme-corp/</span></div>
-      <div class="t-output">&nbsp;</div>
-      <div><span class="t-accent">JobPulse</span> <span class="t-output">Want me to open the application form?</span></div>
+    <div class="term-body">
+      <div><span class="t-p">❯</span> <span class="t-c">/findmeajob</span></div>
+      <br/>
+      <div><span class="t-a">JobPulse</span>  <span class="t-o">Hey, what role are you looking for?</span></div>
+      <div><span class="t-dim">         </span> <span class="t-o">Enter a title, a description, or paste a job URL.</span></div>
+      <br/>
+      <div><span class="t-p">❯</span> <span class="t-c">Remote senior AI engineer, Europe, startup experience preferred</span></div>
+      <br/>
+      <div><span class="t-g">✓</span> <span class="t-o">Preferences saved → <span class="t-cy">job-search/preferences.md</span></span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Generating 6 search variations...</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Searching Indeed · LinkedIn · Google Jobs · ZipRecruiter</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">296 raw results → dedupe → filter → score</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Shortlist: <span class="t-a">23 ranked matches</span> (🥇 6 Top · 🥈 11 Strong · 🥉 6 Worthy)</span></div>
+      <br/>
+      <div><span class="t-a">JobPulse</span>  <span class="t-o">Which ones interest you? (pick numbers, "all", or "top tier")</span></div>
+      <br/>
+      <div><span class="t-p">❯</span> <span class="t-c">1, 3</span></div>
+      <br/>
+      <div><span class="t-g">✓</span> <span class="t-o">Researching Acme AI (Glassdoor · LinkedIn · GitHub · Crunchbase)...</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Customizing resume for Acme AI JD keywords...</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Writing cover letter — 241 words, company-specific opener...</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Generating interview prep — 5 behavioral Qs, 4 technical Qs...</span></div>
+      <br/>
+      <div><span class="t-y">📦</span> <span class="t-cy">Application package ready</span></div>
+      <div><span class="t-dim">   </span> <span class="t-o">job-search/acme-ai/research.md</span></div>
+      <div><span class="t-dim">   </span> <span class="t-o">job-search/acme-ai/jane-doe-resume-acme-ai.pdf</span></div>
+      <div><span class="t-dim">   </span> <span class="t-o">job-search/acme-ai/cover-letter.md</span></div>
+      <div><span class="t-dim">   </span> <span class="t-o">job-search/acme-ai/interview-prep.md</span></div>
+      <br/>
+      <div><span class="t-a">JobPulse</span>  <span class="t-o">Want me to open the application form and walk you through it?</span></div>
     </div>
   </div>
 </div>
 
-<!-- ── Stats ── -->
-<div class="stats">
-  <div class="stat"><div class="stat-num">8</div><div class="stat-label">Job boards scraped</div></div>
-  <div class="stat"><div class="stat-num">6</div><div class="stat-label">AI agents working for you</div></div>
-  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Local — your data stays yours</div></div>
-  <div class="stat"><div class="stat-num">$0</div><div class="stat-label">No API keys needed</div></div>
-</div>
+<!-- ═══ TRY IT ════════════════════════════════════════════ -->
+<div class="tryit-wrap" id="tryit">
+  <div class="tryit-inner">
+    <div class="section-eyebrow">Natural language first</div>
+    <h2 class="section-h">Just describe what you want</h2>
+    <p class="section-sub">You don't need to learn commands. Talk to it like a recruiter.</p>
 
-<!-- ── How it works ── -->
-<section id="how-it-works">
-  <div class="section-inner">
-    <div class="section-label">How it works</div>
-    <h2 class="section-title">From zero to application package<br/>in one session</h2>
-    <p class="section-sub">Type <code style="background:var(--surface);padding:.15rem .4rem;border-radius:4px;font-family:monospace">/findmeajob</code> and let the agent handle the rest.</p>
-    <div class="flow">
-      <div class="flow-step">
-        <div class="step-num">1</div>
-        <div>
-          <h3>Tell it what you want</h3>
-          <p>Role, location, remote preference, salary range, experience level. One question at a time, conversational — not a form dump.</p>
-        </div>
+    <div class="commands">
+      <div class="cmd-card">
+        <span class="cmd-tag">Search</span>
+        <p class="cmd-quote">"Find remote blockchain BD roles in Europe, startup experience required"</p>
+        <p class="cmd-desc">Dual-track search — runs 10+ query variations, scores by relevance to your profile.</p>
       </div>
-      <div class="flow-step">
-        <div class="step-num">2</div>
-        <div>
-          <h3>Deep multi-query search</h3>
-          <p>Generates 5–7 search variations from your profile, runs them in parallel across 8 job boards, dedupes 300+ results down to a scored shortlist.</p>
-        </div>
+      <div class="cmd-card">
+        <span class="cmd-tag">Resume</span>
+        <p class="cmd-quote">"Review my resume and tell me what's hurting me"</p>
+        <p class="cmd-desc">Section-by-section score, common pitfalls checklist, improved version saved automatically.</p>
       </div>
-      <div class="flow-step">
-        <div class="step-num">3</div>
-        <div>
-          <h3>Company research</h3>
-          <p>For each job you select, a dedicated agent browses the company website, Glassdoor, LinkedIn, Crunchbase, and GitHub. Red flags, green flags, culture signals — all in one structured brief.</p>
-        </div>
+      <div class="cmd-card">
+        <span class="cmd-tag">Research</span>
+        <p class="cmd-quote">"What's the culture like at OHB Sweden? Any red flags?"</p>
+        <p class="cmd-desc">Browses Glassdoor, LinkedIn, Crunchbase, GitHub. Structured brief with red/green flags.</p>
       </div>
-      <div class="flow-step">
-        <div class="step-num">4</div>
-        <div>
-          <h3>Application package built automatically</h3>
-          <p>Customized resume (re-keyed to the JD, not fabricated), targeted 3-paragraph cover letter, interview prep guide with STAR outlines — all saved locally, ready to review.</p>
-        </div>
+      <div class="cmd-card">
+        <span class="cmd-tag">Tailor</span>
+        <p class="cmd-quote">"Customize my resume for this Stripe senior engineer posting"</p>
+        <p class="cmd-desc">Re-keys bullets to JD vocabulary. Never fabricates. Saves both markdown and PDF.</p>
       </div>
-      <div class="flow-step">
-        <div class="step-num">5</div>
-        <div>
-          <h3>Browser-assisted apply (optional)</h3>
-          <p>Say "apply to Acme Corp" and the agent opens the form, fills it field by field with your confirmation, and submits only when you say the word. Sensitive fields always flagged to you.</p>
-        </div>
+      <div class="cmd-card">
+        <span class="cmd-tag">Cover letter</span>
+        <p class="cmd-quote">"Write a cover letter for Acme Corp — keep it under 250 words"</p>
+        <p class="cmd-desc">3 paragraphs, company-specific opener pulled from research, real numbers from your resume.</p>
+      </div>
+      <div class="cmd-card">
+        <span class="cmd-tag">Apply</span>
+        <p class="cmd-quote">"Apply to Windward for the satellite partnerships role"</p>
+        <p class="cmd-desc">Opens form in your browser, fills fields with your confirmation, submits only when you say so.</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ── Features ── -->
-<section id="features" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-  <div class="section-inner">
-    <div class="section-label">Features</div>
-    <h2 class="section-title">Everything you need,<br/>nothing you don't</h2>
-
-    <div class="features">
-      <div class="feature">
-        <div class="feature-icon">🔍</div>
-        <h3>Multi-board search</h3>
-        <p>Indeed, LinkedIn, Glassdoor, ZipRecruiter, Google Jobs, Bayt, Naukri, BDJobs — in one command.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🎯</div>
-        <h3>Smart scoring</h3>
-        <p>Domain-aware scorer ranks by AI/stack/seniority/salary signals. Noise filtered before you see it.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">📄</div>
-        <h3>Resume review + build</h3>
-        <p>Score your existing resume or build one from scratch. Follows real formatting and content standards — no fluff.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🏢</div>
-        <h3>Company research</h3>
-        <p>Full research brief: culture signals, tech stack, funding status, red/green flags, and customization notes for your resume.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">✍️</div>
-        <h3>Cover letter writer</h3>
-        <p>3-paragraph, 200–280 words, company-specific opener, real numbers from your resume. No clichés.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🎤</div>
-        <h3>Interview prep</h3>
-        <p>Behavioral questions with STAR outlines drawn from <em>your</em> actual experience. Technical questions, and smart questions to ask them.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🌐</div>
-        <h3>Browser-assisted apply</h3>
-        <p>Navigate, fill, and submit application forms with your AI agent — one confirmation at a time. You're always in control.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🔒</div>
-        <h3>100% local data</h3>
-        <p>All resumes, research, and preferences stay on your machine in <code>job-search/</code>. No telemetry, no cloud sync.</p>
-      </div>
-    </div>
-
-    <div style="margin-top: 3rem;">
-      <p class="section-label">Job boards</p>
-      <div class="boards">
-        <span class="board-chip">Indeed</span>
-        <span class="board-chip">LinkedIn</span>
-        <span class="board-chip">Glassdoor</span>
-        <span class="board-chip">ZipRecruiter</span>
-        <span class="board-chip">Google Jobs</span>
-        <span class="board-chip">Bayt</span>
-        <span class="board-chip">Naukri</span>
-        <span class="board-chip">BDJobs</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Install ── -->
-<section id="install">
-  <div class="section-inner">
-    <div class="section-label">Install</div>
-    <h2 class="section-title">Up and running in 60 seconds</h2>
-    <p class="section-sub">Requires <a href="https://claude.ai/download" style="color:var(--accent2)">Claude Code</a>, Python ≥ 3.10, and Node.js ≥ 18.</p>
-
-    <div class="install-block">
-      <div class="install-tab">
-        <div class="tab active">Plugin marketplace</div>
-        <div class="tab" style="color:var(--muted)">Manual</div>
-      </div>
-      <div class="install-code">
-        <div class="line"><span class="prompt">/</span><span class="code">plugin marketplace add JCodesMore/jcodesmore-plugins</span></div>
-        <div class="line"><span class="prompt">/</span><span class="code">plugin install jobs-for-ai-agents@jcodesmore-plugins</span></div>
-        <div style="margin-top:1rem; color: #475569; font-size: 0.8rem;"># Restart Claude Code, then:</div>
-        <div class="line" style="margin-top:0.5rem"><span class="prompt">/</span><span class="code">findmeajob</span></div>
-      </div>
-    </div>
-
-    <p style="margin-top: 2rem; color: var(--muted); font-size: 0.9rem;">
-      Or clone and run directly:
-      <code style="background:var(--surface); border:1px solid var(--border); padding:.2rem .5rem; border-radius:4px; font-family:monospace; font-size:0.85rem; margin-left:.5rem;">
-        git clone https://github.com/dnzengou/jobpulse-ai-agent.git && claude --plugin-dir jobpulse-ai-agent
-      </code>
-    </p>
-  </div>
-</section>
-
-<!-- ── CTA ── -->
-<div class="cta-banner">
-  <h2>Ready to find your next role?</h2>
-  <p>Free, open source, runs entirely on your machine.</p>
-  <div class="hero-actions">
-    <a class="btn-primary" href="#install">Install now →</a>
-    <a class="btn-secondary" href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank">★ Star on GitHub</a>
   </div>
 </div>
 
-<!-- ── Footer ── -->
+<!-- ═══ DELIVERABLES ══════════════════════════════════════ -->
+<div class="deliverables-wrap" id="deliverables">
+  <div class="section-eyebrow">What you get</div>
+  <h2 class="section-h">A complete application package, per job</h2>
+  <p class="section-sub">Every output saved locally inside <code style="font-family:'JetBrains Mono',monospace;font-size:.88em;background:rgba(255,255,255,.05);padding:.1rem .4rem;border-radius:4px">job-search/[company]/</code></p>
+
+  <div class="del-grid">
+    <div class="del-card">
+      <div class="del-icon">🏢</div>
+      <h3>Company research brief</h3>
+      <p>Culture, funding stage, tech stack, red/green flags, Glassdoor patterns, and Resume Customization Notes for the agent pipeline.</p>
+      <span class="del-file">research.md</span>
+    </div>
+    <div class="del-card">
+      <div class="del-icon">📄</div>
+      <h3>Tailored resume</h3>
+      <p>Your base resume re-keyed to the JD vocabulary and reordered by relevance. Factual — no invented experience.</p>
+      <span class="del-file">[name]-resume-[company].pdf</span>
+    </div>
+    <div class="del-card">
+      <div class="del-icon">✍️</div>
+      <h3>Cover letter</h3>
+      <p>3 paragraphs, 200–280 words. Company-specific opener, real metrics from your resume, no clichés.</p>
+      <span class="del-file">cover-letter.md</span>
+    </div>
+    <div class="del-card">
+      <div class="del-icon">🎤</div>
+      <h3>Interview prep guide</h3>
+      <p>5–6 behavioral questions with STAR outlines drawn from your actual resume. Technical Qs and smart questions to ask them.</p>
+      <span class="del-file">interview-prep.md</span>
+    </div>
+    <div class="del-card">
+      <div class="del-icon">🔗</div>
+      <h3>Apply link + status</h3>
+      <p>Direct apply URL, source board, date found, and application status updated automatically when you apply.</p>
+      <span class="del-file">apply-link.md</span>
+    </div>
+    <div class="del-card">
+      <div class="del-icon">🌐</div>
+      <h3>Browser-assisted apply</h3>
+      <p>Optional. Opens the form, fills fields section by section, uploads your customized PDF. Submits only on your explicit "submit".</p>
+      <span class="del-file">/apply skill</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BOARDS STRIP ══════════════════════════════════════ -->
+<div class="boards-strip">
+  <div class="boards-label">Searches all 8 boards simultaneously</div>
+  <div class="boards">
+    <span class="board">Indeed</span>
+    <span class="board">LinkedIn</span>
+    <span class="board">Glassdoor</span>
+    <span class="board">ZipRecruiter</span>
+    <span class="board">Google Jobs</span>
+    <span class="board">Bayt</span>
+    <span class="board">Naukri</span>
+    <span class="board">BDJobs</span>
+  </div>
+</div>
+
+<!-- ═══ CTA FINAL ═════════════════════════════════════════ -->
+<div class="cta-final">
+  <h2>Ready to run your job search<br/>on autopilot?</h2>
+  <p>Free, open source, everything runs on your machine.</p>
+  <div class="hero-ctas">
+    <a class="btn btn-primary" href="#quickstart">Install the plugin →</a>
+    <a class="btn btn-ghost" href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      ★ Star on GitHub
+    </a>
+  </div>
+  <p class="cta-sub">Apache 2.0 · No telemetry · No cloud sync · Your data stays yours</p>
+</div>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════ -->
 <footer>
   <div>
-    <span style="font-weight:600; color: var(--text)">JobPulse AI Agent</span>
-    &nbsp;·&nbsp; Apache 2.0 License
+    <strong style="color:var(--text)">JobPulse AI Agent</strong>
+    <span style="margin:0 .6rem;color:var(--border)">|</span>
+    Apache 2.0
+    <span style="margin:0 .6rem;color:var(--border)">|</span>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md" target="_blank" rel="noopener">Blueprint v0.3.1</a>
   </div>
   <div class="footer-links">
-    <a href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank">GitHub</a>
-    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md" target="_blank">Blueprint</a>
-    <a href="https://github.com/dnzengou/jobpulse-ai-agent/issues" target="_blank">Issues</a>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent/issues" target="_blank" rel="noopener">Issues</a>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md" target="_blank" rel="noopener">Docs</a>
+    <a href="https://discord.gg/babcVNJBet" target="_blank" rel="noopener">Discord</a>
   </div>
 </footer>
 
