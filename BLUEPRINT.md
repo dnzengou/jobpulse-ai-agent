@@ -178,12 +178,14 @@ job-search/
 ├── preferences.md
 ├── [name]-resume.{md,pdf}
 ├── jobs-final.json
+├── linkedin-optimized.md            ← LinkedIn profile optimization (standalone)
 └── [company-slug]/
     ├── research.md
     ├── apply-link.md
     ├── [name]-resume-[slug].{md,pdf}
     ├── cover-letter.md
-    └── interview-prep.md
+    ├── interview-prep.md
+    └── salary-negotiation.md        ← On offer received
 ```
 
 ---
@@ -248,7 +250,8 @@ Describes the plugin, shows a terminal demo, lists features, and provides instal
 Config: `vercel.json` → serves `public/` as static output.
 
 **Live URL:** https://jobpulse-ai-agent.vercel.app
-**Deployment ID:** `dpl_BMHJgc6RfwWtiPhF5iPsrJAGDg3s`
+**Deployment ID:** `dpl_HPHMp1yBeLQaWPzvwv6h9US4fTvV` *(v0.4.0, 2026-05-21)*
+**Previous:** `dpl_BMHJgc6RfwWtiPhF5iPsrJAGDg3s` *(v0.3.2)*
 **Region:** Washington D.C. (iad1)
 **Status:** ✅ Production — auto-deploys on every push to `main`
 
