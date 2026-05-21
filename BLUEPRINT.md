@@ -1,4 +1,4 @@
-# Jobs for AI Agents — Production Blueprint v0.3.1
+# Jobs for AI Agents — Production Blueprint v0.4.0
 
 *Updated: 2026-05-21*
 
@@ -31,6 +31,10 @@ User
        ├─ cover-letter-writer (agent) ──→ 3-para targeted letter
        │
        ├─ interview-prepper (agent) ──→ STAR outlines + Q&A guide
+       │
+       ├─ salary-negotiator (agent) ──→ market rate research + counter-offer email
+       │
+       ├─ linkedin-optimizer (agent) ──→ profile audit + section rewrites
        │
        └─ /apply (skill) ──→ browser-use → form fill + submit
 ```
@@ -74,6 +78,8 @@ agents/
   resume-customizer.md     Tailor base resume for one specific job
   cover-letter-writer.md   3-paragraph targeted cover letter (200-280 words)
   interview-prepper.md     Behavioral Qs, STAR outlines, technical Qs, questions to ask
+  salary-negotiator.md     Market rate research, offer evaluation, counter-offer email + BATNA
+  linkedin-optimizer.md    Profile audit, headline rewrite, About/Experience optimization
 
 references/
   resume-best-practices.md  Content rules (DOs/DON'Ts, section order, bullets, ATS)
@@ -126,14 +132,24 @@ Output: ranked JSON array with _score field
 ## Agent Dispatch Order (per selected job)
 
 ```
-1. company-researcher         (independent — runs first)
+1. company-researcher              (independent — runs first)
    │
-   ├─ 2. resume-customizer    (needs research.md)
-   ├─ 3. cover-letter-writer  (needs research.md)
-   └─ 4. interview-prepper    (needs research.md)
+   ├─ 2. resume-customizer         (needs research.md)
+   ├─ 3. cover-letter-writer       (needs research.md)
+   └─ 4. interview-prepper         (needs research.md)
+
+On offer received:
+   5. salary-negotiator            (needs offer details from user + optional research.md)
+
+Profile optimization (standalone — anytime):
+   6. resume-reviewer              (needs base resume only)
+   7. resume-builder               (scans user files)
+   8. linkedin-optimizer           (needs base resume + LinkedIn profile text)
 ```
 
 Agents 2, 3, 4 can run in parallel after agent 1 completes.
+Agent 5 is triggered separately when user receives an offer.
+Agents 6, 7, 8 can be invoked independently at any point in the workflow.
 
 ---
 
@@ -191,6 +207,8 @@ job-search/
 | `[name]-resume-[slug].pdf` | Base resume tailored to this JD (reordered, re-keyworded, factual) |
 | `cover-letter.md` | 3-paragraph, 200-280 word targeted letter with company-specific opener |
 | `interview-prep.md` | 5-6 behavioral Qs with STAR outlines, 3-5 technical Qs, questions to ask |
+| `salary-negotiation.md` | Market rate data (P25/median/P75), offer evaluation, counter email draft, BATNA talking points |
+| `linkedin-optimized.md` | Section audit scores, optimized headline, rewritten About, skills gap, completeness checklist |
 | `apply-link.md` | Apply URL + application status + date applied |
 
 ---
@@ -212,6 +230,7 @@ Optional paid additions: Context7 MCP (live library docs), Playwright MCP (headl
 | 0.3.0 | search_jobs_batch tool, salary normalization, cover-letter-writer agent, interview-prepper agent, /apply skill with browser-use, hybrid/min-score flags in processor, expanded title patterns, Karpathy-style agent prompts |
 | 0.3.1 | Niche-role search patterns, custom domain scorers, two-pass strategy, European market guidance, blockchain/web3 profile support, JobSpy country limitations doc, landing page, Vercel/Netlify deploy, GitHub push |
 | 0.3.2 | Worldmonitor-inspired onboarding UX redesign: benefit-first hero, 5-metric strip, 3-step quick start with tagged steps + prereqs, live terminal demo, natural language command cards, deliverables grid with filename tags, trust signals, animated live badge. Vercel production deploy. |
+| 0.4.0 | Generalized for public release: 2 new agents (salary-negotiator, linkedin-optimizer), 4-persona "Who it's for" section, comparison table vs. manual/LinkedIn Premium/ChatGPT, 7-item FAQ with accordion, 8 natural-language command cards, expanded deliverables grid (8 cards), metric strip updated (8 agents), vercel.json cleanup (remove deprecated name). |
 
 ---
 
@@ -262,6 +281,99 @@ Live URL pattern: `https://jobpulse-ai-agent.netlify.app`
 The MCP server and plugin files are distributed via GitHub and installed with
 `claude --plugin-dir .` or via the Claude Code plugin marketplace.
 The Vercel/Netlify site is purely a marketing/documentation landing page.
+
+---
+
+## Tool Characterization
+
+### What it is
+JobPulse is a **Claude Code plugin** — a local-first, AI-powered job application pipeline.
+It turns Claude into a personal recruiter + career strategist that runs entirely on the user's machine.
+
+### What it does (end-to-end)
+```
+1. SEARCH   → Multi-board scrape (8 boards, batch queries, dedupe, score, rank)
+2. RESEARCH → Per-company brief (culture, tech, red flags, resume customization notes)
+3. TAILOR   → Resume re-keyed to JD vocabulary (never fabricates)
+4. WRITE    → Cover letter (3 paragraphs, 200-280 words, company-specific opener)
+5. PREP     → Interview guide (STAR outlines from resume, technical Qs, questions to ask)
+6. NEGOTIATE → Salary playbook (market rates, counter email, BATNA)
+7. OPTIMIZE → LinkedIn profile audit + section rewrites for recruiter visibility
+8. APPLY    → Browser-assisted form fill with explicit user confirmation at each step
+```
+
+### What it is NOT
+- Not a SaaS product (no server, no account, no database)
+- Not a browser extension or standalone app
+- Not a replacement for human judgment — it presents options, user decides
+- Not a resume fabricator — all content grounded in user-provided facts
+
+### Core invariants
+- All user data stays on local disk (`job-search/`)
+- No submit without explicit "submit" keyword
+- No API keys required for scraping
+- No telemetry or usage tracking
+- All agent outputs are editable markdown / PDF
+
+---
+
+## Public Personas & Use Cases
+
+JobPulse is designed for any professional, not just software engineers.
+
+### Persona 1 — Tech Professional
+**Profile:** Software engineer, AI/ML engineer, data scientist, DevOps, architect, engineering manager
+**Search pattern:** Stack-matched keywords (Python, LLM, distributed systems...), remote-first, startup or FAANG
+**Key agents:** company-researcher → resume-customizer → interview-prepper
+**Niche:** process_jobs.py default scorer; salary-negotiator for competing offers
+
+### Persona 2 — Business & BD Leader
+**Profile:** Business development, sales, partnerships, growth manager, strategy
+**Search pattern:** Domain BD scorer (`BIZ_DEV_KW`); startup BD, GTM, channel partners
+**Key agents:** company-researcher → cover-letter-writer (relationship-focused opening) → salary-negotiator
+**Niche:** Dual-track search (industry A + industry B) for versatile BD profiles
+
+### Persona 3 — Niche Specialist
+**Profile:** Space tech, deep tech, blockchain/Web3, climate, biotech, fintech innovation
+**Search pattern:** Domain scorers (SPACE_KW, DEEPTECH_KW, BLOCKCHAIN_KW, INNOVATION_KW...)
+**Key agents:** Full pipeline; 2-pass search strategy for thin markets
+**Niche:** Direct-outreach guidance when boards capture < 30% of openings
+
+### Persona 4 — Career Changer
+**Profile:** Pivoting industries, re-entering workforce, upskilling to new domain
+**Search pattern:** Transferable keyword extraction; broader title patterns; skills bridging
+**Key agents:** resume-builder (extract transferable skills) → resume-customizer (bridge vocab gap) → interview-prepper (address career change narrative)
+**Niche:** linkedin-optimizer adds biggest value here (reposition profile for new industry)
+
+---
+
+## Expansion Roadmap
+
+### v0.4.x — Consolidation
+- [ ] `process_jobs.py` multi-persona mode: `--persona tech|bd|niche|career-change`
+- [ ] Auto-detect persona from resume content (no manual flag needed)
+- [ ] Salary range normalization for non-USD currencies (SEK, EUR, GBP)
+- [ ] PDF resume output improvements (better markdown-to-PDF rendering)
+
+### v0.5.0 — Application tracker
+- [ ] `job-search/tracker.md` — kanban-style table (Applied / Interview / Offer / Rejected)
+- [ ] Auto-updated by `/apply` skill when form is submitted
+- [ ] Weekly summary report: "You applied to 8 jobs. 3 responses. 1 interview scheduled."
+
+### v0.6.0 — Referral & outreach
+- [ ] `outreach-writer` agent — draft cold outreach to hiring managers / employees
+- [ ] `referral-requester` agent — personalized referral ask based on LinkedIn connection research
+- [ ] Generates LinkedIn DM + email variants
+
+### v0.7.0 — Multi-language support
+- [ ] Cover letter / resume bullets in target language (French, German, Spanish, Swedish...)
+- [ ] Job description translation before scoring (for non-English JDs)
+- [ ] Locale-aware salary normalization
+
+### v0.8.0 — Continuous monitoring
+- [ ] Scheduled re-scrape (cron via Claude Code hooks) for new postings matching saved preferences
+- [ ] Alert summary: "5 new jobs match your profile since yesterday"
+- [ ] Automated de-listing detection (job removed = application stale)
 
 ---
 
@@ -412,19 +524,23 @@ naturally from cross-track scoring.
 | **Specificity over vagueness** | Named boards (Indeed, LinkedIn…), named agents, named output files |
 | **Privacy reassurance** | Repeated: "your data stays local", "no cloud sync", "no telemetry" |
 
-### Page sections (scroll order)
+### Page sections (scroll order) — v0.4.0
 
 ```
-1. Nav          — sticky, logo + 4 links + pill CTA
-2. Hero         — animated badge, h1, sub, trust line, 2 CTAs
-3. Metric strip — 5 quantified numbers (boards, agents, local, cost, speed)
-4. Quick start  — 3 tagged steps (Install / Setup / Go) with code blocks + prereqs
-5. Terminal     — live demo of a full /findmeajob session
-6. Try it       — 6 natural-language command cards with descriptions
-7. Deliverables — 6 output cards with filename tags
-8. Boards strip — 8 job board chips
-9. CTA final    — repeat CTA with trust footer
-10. Footer      — license, links
+1.  Nav           — sticky, logo + 5 links + pill CTA
+2.  Hero          — animated badge (v0.4.0), h1, sub, trust line (any role/industry), 2 CTAs
+3.  Metric strip  — 8 boards · 8 agents · 100% local · $0 · ∞ roles
+4.  Who it's for  — 4 persona cards (Tech / Business & BD / Niche / Career Changer)
+5.  Quick start   — 3 tagged steps (Install / Setup / Go) with code blocks + prereqs
+6.  Terminal      — live /findmeajob demo (fintech PM scenario)
+7.  Comparison    — feature table vs. manual / LinkedIn Premium / ChatGPT
+8.  Try it        — 8 natural-language command cards (search, niche, resume, research,
+                    negotiate, LinkedIn, cover letter, apply)
+9.  Deliverables  — 8 output cards with filename tags (incl. salary-negotiation, linkedin-optimized)
+10. FAQ           — 7-item accordion (JS progressive disclosure)
+11. Boards strip  — 8 board chips
+12. CTA final     — "Stop searching manually" + trust footer
+13. Footer        — Blueprint v0.4.0 link
 ```
 
 ### Quick start step pattern

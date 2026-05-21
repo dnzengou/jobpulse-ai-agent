@@ -28,6 +28,8 @@ Agent instructions are in `agents/`:
 - `agents/resume-customizer.md` — Tailor the base resume to a specific job using the research brief
 - `agents/cover-letter-writer.md` — Write a targeted 3-paragraph cover letter (200-280 words)
 - `agents/interview-prepper.md` — Generate role-specific behavioral + technical questions, STAR outlines, and questions to ask
+- `agents/salary-negotiator.md` — Research market rates, evaluate an offer, draft a counter-offer email with BATNA talking points
+- `agents/linkedin-optimizer.md` — Audit and rewrite LinkedIn headline, About, and experience bullets for recruiter + ATS visibility
 
 ## Reference Knowledge
 

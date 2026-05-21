@@ -4,9 +4,9 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>JobPulse AI Agent — Find, apply, and land your next role from Claude</title>
-  <meta name="description" content="AI job-search agent for Claude Code. Searches 8 boards, customizes your resume, writes cover letters, preps interviews, and fills applications — 100% local, no API keys."/>
+  <meta name="description" content="AI job-search agent for Claude Code. Searches 8 boards, customizes your resume, writes cover letters, preps interviews, negotiates offers, and fills applications — 100% local, no API keys."/>
   <meta property="og:title" content="JobPulse AI Agent"/>
-  <meta property="og:description" content="Find, research, and apply to jobs without leaving Claude Code. No API keys. Your data stays local."/>
+  <meta property="og:description" content="Find, research, and apply to jobs without leaving Claude Code. No API keys. Your data stays local. Works for any role, any industry."/>
   <meta property="og:type" content="website"/>
   <meta name="theme-color" content="#0a0a0f"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -48,7 +48,7 @@
     /* ─── HERO ────────────────────────────────────────── */
     .hero{
       text-align:center;padding:5.5rem 1.5rem 3.5rem;
-      max-width:780px;margin:0 auto;
+      max-width:800px;margin:0 auto;
     }
     .badge{
       display:inline-flex;align-items:center;gap:.45rem;
@@ -68,7 +68,7 @@
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
     }
     .hero-sub{
-      font-size:1.1rem;color:var(--muted);max-width:500px;
+      font-size:1.1rem;color:var(--muted);max-width:540px;
       margin:0 auto 2rem;line-height:1.65;
     }
     .trust-line{
@@ -95,7 +95,7 @@
       margin:0;
     }
     .metric{
-      flex:1;min-width:140px;text-align:center;padding:1.6rem 1rem;
+      flex:1;min-width:130px;text-align:center;padding:1.6rem 1rem;
       border-right:1px solid var(--border);
     }
     .metric:last-child{border-right:none}
@@ -105,15 +105,34 @@
     .metric-num.green{color:var(--green)}
     .metric-label{font-size:.78rem;color:var(--muted);margin-top:.25rem;font-weight:500}
 
-    /* ─── QUICK START ─────────────────────────────────── */
-    .qs-wrap{max-width:820px;margin:0 auto;padding:5rem 1.5rem}
+    /* ─── SHARED SECTION ─────────────────────────────── */
     .section-eyebrow{
       font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
       color:var(--cyan);margin-bottom:.65rem;
     }
     .section-h{font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.6rem}
-    .section-sub{color:var(--muted);font-size:1rem;margin-bottom:2.8rem;max-width:480px}
+    .section-sub{color:var(--muted);font-size:1rem;margin-bottom:2.8rem;max-width:520px}
 
+    /* ─── WHO IT'S FOR (PERSONAS) ───────────────────── */
+    .personas-wrap{max-width:1060px;margin:0 auto;padding:5rem 1.5rem}
+    .persona-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-top:2.5rem}
+    .persona-card{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:1.4rem 1.5rem;
+      transition:border-color .2s,transform .15s;
+    }
+    .persona-card:hover{transform:translateY(-3px);border-color:rgba(124,58,237,.35)}
+    .persona-emoji{font-size:2rem;margin-bottom:.65rem}
+    .persona-card h3{font-size:.95rem;font-weight:700;margin-bottom:.35rem;color:var(--text)}
+    .persona-card p{font-size:.82rem;color:var(--muted);line-height:1.55}
+    .persona-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.75rem}
+    .persona-tag{
+      font-size:.68rem;font-weight:600;padding:.1rem .45rem;border-radius:4px;
+      background:rgba(6,182,212,.08);color:var(--cyan);border:1px solid rgba(6,182,212,.18);
+    }
+
+    /* ─── QUICK START ─────────────────────────────────── */
+    .qs-wrap{max-width:820px;margin:0 auto;padding:5rem 1.5rem}
     .steps{display:flex;flex-direction:column;gap:.75rem}
     .step{
       display:grid;grid-template-columns:48px 1fr;gap:1.25rem;
@@ -144,7 +163,6 @@
     }
     .code-block .prompt{color:var(--green);user-select:none;flex-shrink:0}
     .code-block .cmd{color:var(--text)}
-    .code-block .comment{color:var(--muted2)}
     .step-tag{
       display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.06em;
       text-transform:uppercase;padding:.15rem .5rem;border-radius:4px;margin-bottom:.5rem;
@@ -154,9 +172,7 @@
     .tag-go{background:rgba(124,58,237,.15);color:var(--accent-light);border:1px solid rgba(124,58,237,.28)}
 
     /* ─── TERMINAL DEMO ───────────────────────────────── */
-    .demo-wrap{
-      max-width:760px;margin:0 auto;padding:0 1.5rem 5rem;
-    }
+    .demo-wrap{max-width:760px;margin:0 auto;padding:0 1.5rem 5rem}
     .terminal{
       background:#0b0b12;border:1px solid var(--border);
       border-radius:var(--radius-lg);overflow:hidden;
@@ -175,15 +191,37 @@
     .t-a{color:var(--accent-light)}.t-cy{color:var(--cyan)}.t-y{color:var(--yellow)}
     .t-g{color:var(--green)}.t-dim{color:var(--muted2)}
 
-    /* ─── TRY IT ──────────────────────────────────────── */
-    .tryit-wrap{
+    /* ─── COMPARISON TABLE ───────────────────────────── */
+    .compare-wrap{
       background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-      padding:4rem 1.5rem;
+      padding:5rem 1.5rem;
     }
-    .tryit-inner{max-width:900px;margin:0 auto}
+    .compare-inner{max-width:860px;margin:0 auto}
+    .compare-table{width:100%;border-collapse:collapse;margin-top:2.5rem;font-size:.875rem}
+    .compare-table th{
+      padding:.75rem 1rem;text-align:left;font-size:.75rem;font-weight:700;
+      letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+      border-bottom:1px solid var(--border);
+    }
+    .compare-table th:first-child{min-width:200px}
+    .compare-table th.hl{color:var(--accent-light)}
+    .compare-table td{
+      padding:.7rem 1rem;border-bottom:1px solid rgba(28,28,42,.7);
+      vertical-align:middle;
+    }
+    .compare-table tr:last-child td{border-bottom:none}
+    .compare-table td:nth-child(2){color:var(--text);font-weight:600}
+    .compare-table td.dim{color:var(--muted2)}
+    .chk{color:var(--green);font-size:1rem}
+    .cross{color:var(--muted2);font-size:1rem}
+    .partial{color:var(--yellow)}
+
+    /* ─── TRY IT ──────────────────────────────────────── */
+    .tryit-wrap{padding:5rem 1.5rem}
+    .tryit-inner{max-width:960px;margin:0 auto}
     .commands{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.75rem;margin-top:2rem}
     .cmd-card{
-      background:var(--bg);border:1px solid var(--border);
+      background:var(--surface);border:1px solid var(--border);
       border-radius:var(--radius);padding:1.1rem 1.25rem;
       display:flex;flex-direction:column;gap:.5rem;
       transition:border-color .2s,transform .15s;cursor:default;
@@ -198,9 +236,9 @@
       width:fit-content;
     }
 
-    /* ─── WHAT YOU GET ────────────────────────────────── */
-    .deliverables-wrap{max-width:1000px;margin:0 auto;padding:5rem 1.5rem}
-    .del-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:2.5rem}
+    /* ─── DELIVERABLES ────────────────────────────────── */
+    .deliverables-wrap{max-width:1060px;margin:0 auto;padding:5rem 1.5rem}
+    .del-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1rem;margin-top:2.5rem}
     .del-card{
       background:var(--surface);border:1px solid var(--border);
       border-radius:var(--radius-lg);padding:1.4rem;
@@ -217,7 +255,38 @@
       padding:.2rem .5rem;display:inline-block;
     }
 
-    /* ─── BOARDS ──────────────────────────────────────── */
+    /* ─── FAQ ─────────────────────────────────────────── */
+    .faq-wrap{
+      background:var(--surface);border-top:1px solid var(--border);
+      padding:5rem 1.5rem;
+    }
+    .faq-inner{max-width:740px;margin:0 auto}
+    .faq-list{margin-top:2.5rem;display:flex;flex-direction:column;gap:.6rem}
+    .faq-item{
+      background:var(--bg);border:1px solid var(--border);
+      border-radius:var(--radius);overflow:hidden;
+    }
+    .faq-q{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1rem 1.25rem;cursor:pointer;
+      font-size:.92rem;font-weight:600;color:var(--text);
+      list-style:none;user-select:none;
+      transition:background .15s;
+    }
+    .faq-q:hover{background:rgba(255,255,255,.02)}
+    .faq-q::after{
+      content:'+';font-size:1.25rem;font-weight:300;
+      color:var(--muted);flex-shrink:0;margin-left:1rem;
+      transition:transform .2s;
+    }
+    .faq-item.open .faq-q::after{transform:rotate(45deg)}
+    .faq-a{
+      font-size:.875rem;color:var(--muted);line-height:1.65;
+      padding:0 1.25rem 1rem;display:none;
+    }
+    .faq-item.open .faq-a{display:block}
+
+    /* ─── BOARDS STRIP ────────────────────────────────── */
     .boards-strip{
       text-align:center;padding:3rem 1.5rem;
       border-top:1px solid var(--border);
@@ -259,6 +328,8 @@
       .metric-num{font-size:1.6rem}
       .step{grid-template-columns:1fr}
       .step-num{width:40px;height:40px;font-size:.95rem}
+      .compare-table th:nth-child(3),.compare-table td:nth-child(3),
+      .compare-table th:nth-child(4),.compare-table td:nth-child(4){display:none}
       footer{flex-direction:column}
     }
   </style>
@@ -272,6 +343,7 @@
     <li><a href="#quickstart">Quick start</a></li>
     <li><a href="#tryit">Try it</a></li>
     <li><a href="#deliverables">What you get</a></li>
+    <li><a href="#faq">FAQ</a></li>
     <li><a href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
   <a class="nav-pill" href="#quickstart">Get started →</a>
@@ -281,14 +353,15 @@
 <div class="hero">
   <div class="badge">
     <span class="badge-dot"></span>
-    v0.3.1 &nbsp;·&nbsp; Open Source &nbsp;·&nbsp; Claude Code Plugin
+    v0.4.0 &nbsp;·&nbsp; Open Source &nbsp;·&nbsp; Claude Code Plugin
   </div>
 
   <h1>Your AI agent for<br/><span class="h1-grad">the entire job hunt</span></h1>
 
   <p class="hero-sub">
     One command. 8 job boards searched, companies researched, resume tailored,
-    cover letter written, interviews prepped — and applications filed.
+    cover letter written, interviews prepped, offers negotiated — and applications filed.
+    Works for any role, any industry, worldwide.
   </p>
 
   <div class="trust-line">
@@ -306,7 +379,7 @@
     </span>
     <span class="trust-item">
       <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M13 4L6.5 11 3 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Runs inside Claude Code
+      Any role · Any industry
     </span>
   </div>
 
@@ -322,14 +395,73 @@
 <!-- ═══ METRIC STRIP ══════════════════════════════════════ -->
 <div class="metrics">
   <div class="metric"><div class="metric-num accent">8</div><div class="metric-label">Job boards scraped</div></div>
-  <div class="metric"><div class="metric-num cyan">6</div><div class="metric-label">AI agents on your team</div></div>
+  <div class="metric"><div class="metric-num cyan">8</div><div class="metric-label">AI agents on your team</div></div>
   <div class="metric"><div class="metric-num green">100%</div><div class="metric-label">Local — zero cloud sync</div></div>
-  <div class="metric"><div class="metric-num" style="color:var(--yellow)">$0</div><div class="metric-label">Extra API cost</div></div>
-  <div class="metric"><div class="metric-num" style="color:var(--text)">60s</div><div class="metric-label">To first results</div></div>
+  <div class="metric"><div class="metric-num" style="color:var(--yellow)">$0</div><div class="metric-label">Extra cost to run</div></div>
+  <div class="metric"><div class="metric-num" style="color:var(--text)">∞</div><div class="metric-label">Roles & industries</div></div>
+</div>
+
+<!-- ═══ WHO IT'S FOR ══════════════════════════════════════ -->
+<div class="personas-wrap" id="personas">
+  <div class="section-eyebrow">Who it's for</div>
+  <h2 class="section-h">Built for every professional</h2>
+  <p class="section-sub">JobPulse works for any role, any seniority, any location. Tell it what you're looking for — it does the rest.</p>
+
+  <div class="persona-grid">
+
+    <div class="persona-card">
+      <div class="persona-emoji">🧑‍💻</div>
+      <h3>Tech Professionals</h3>
+      <p>Engineers, architects, PMs, data scientists. Multi-board scraping with stack-matching scorer and ATS keyword alignment.</p>
+      <div class="persona-tags">
+        <span class="persona-tag">Software Engineering</span>
+        <span class="persona-tag">AI / ML</span>
+        <span class="persona-tag">Product</span>
+        <span class="persona-tag">Data</span>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-emoji">💼</div>
+      <h3>Business & BD Leaders</h3>
+      <p>Sales, partnerships, growth, strategy. Domain scorers tuned for BD signals — startup, venture, GTM, channel partners.</p>
+      <div class="persona-tags">
+        <span class="persona-tag">Business Dev</span>
+        <span class="persona-tag">Partnerships</span>
+        <span class="persona-tag">Growth</span>
+        <span class="persona-tag">Strategy</span>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-emoji">🔬</div>
+      <h3>Niche Specialists</h3>
+      <p>Space tech, deep tech, blockchain/Web3, climate, biotech, fintech. Custom signal libraries score roles in thin markets others miss.</p>
+      <div class="persona-tags">
+        <span class="persona-tag">Space / Aerospace</span>
+        <span class="persona-tag">Web3 / DeFi</span>
+        <span class="persona-tag">Deep Tech</span>
+        <span class="persona-tag">Climate</span>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-emoji">🔄</div>
+      <h3>Career Changers</h3>
+      <p>Pivoting industries? The resume builder extracts transferable skills, the customizer bridges vocabulary gaps, the research brief tells you what matters.</p>
+      <div class="persona-tags">
+        <span class="persona-tag">Pivoting</span>
+        <span class="persona-tag">Upskilling</span>
+        <span class="persona-tag">Re-entry</span>
+        <span class="persona-tag">Cross-industry</span>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <!-- ═══ QUICK START ═══════════════════════════════════════ -->
-<div class="qs-wrap" id="quickstart">
+<div class="qs-wrap" id="quickstart" style="border-top:1px solid var(--border)">
   <div class="section-eyebrow">Quick start</div>
   <h2 class="section-h">Up and running in three steps</h2>
   <p class="section-sub">Requires <a href="https://claude.ai/download" style="color:var(--cyan)" target="_blank" rel="noopener">Claude Code</a>, Python ≥ 3.10, Node.js ≥ 18. No accounts, no API keys.</p>
@@ -366,7 +498,7 @@
       <div class="step-body">
         <span class="step-tag tag-config">Setup</span>
         <h3>Restart Claude Code</h3>
-        <p>Fully quit and reopen Claude Code. The plugin registers on startup and runs a one-time dependency check — this takes about 30 seconds on first launch.</p>
+        <p>Fully quit and reopen Claude Code. The plugin registers on startup and runs a one-time dependency check — about 30 seconds on first launch.</p>
         <div class="code-block">
           <span class="cmd" style="color:var(--muted)">⌘Q / Alt+F4 → reopen Claude Code</span>
         </div>
@@ -382,13 +514,13 @@
       <div class="step-body">
         <span class="step-tag tag-go">Go</span>
         <h3>Start your search</h3>
-        <p>Type the slash command or just describe what you want in plain language. The agent guides you through the rest — one question at a time, no form to fill.</p>
+        <p>Type the slash command or describe what you want in plain language. The agent guides you through the rest — one question at a time, no form to fill.</p>
         <div class="code-block">
           <span class="prompt">/</span>
           <span class="cmd">findmeajob</span>
         </div>
         <p style="margin-top:.45rem;font-size:.78rem;color:var(--muted2)">
-          Or just tell Claude naturally: <em style="color:var(--muted)">"Find me remote AI engineer jobs in Europe"</em>
+          Or naturally: <em style="color:var(--muted)">"Find remote product manager jobs in Europe, fintech preferred"</em>
         </p>
       </div>
     </div>
@@ -407,7 +539,7 @@
       &nbsp;·&nbsp;
       <a href="https://nodejs.org" style="color:var(--cyan)" target="_blank" rel="noopener">Node.js 18+</a> installed
       &nbsp;·&nbsp;
-      A working directory (the plugin writes to <code style="font-family:'JetBrains Mono',monospace;font-size:.76rem">job-search/</code> inside it)
+      A working directory (plugin writes to <code style="font-family:'JetBrains Mono',monospace;font-size:.76rem">job-search/</code> inside it)
     </div>
   </div>
 </div>
@@ -422,34 +554,120 @@
     <div class="term-body">
       <div><span class="t-p">❯</span> <span class="t-c">/findmeajob</span></div>
       <br/>
-      <div><span class="t-a">JobPulse</span>  <span class="t-o">Hey, what role are you looking for?</span></div>
-      <div><span class="t-dim">         </span> <span class="t-o">Enter a title, a description, or paste a job URL.</span></div>
+      <div><span class="t-a">JobPulse</span>  <span class="t-o">What role are you looking for?</span></div>
+      <div><span class="t-dim">         </span> <span class="t-o">Enter a title, description, or paste a job URL.</span></div>
       <br/>
-      <div><span class="t-p">❯</span> <span class="t-c">Remote senior AI engineer, Europe, startup experience preferred</span></div>
+      <div><span class="t-p">❯</span> <span class="t-c">Remote senior product manager, fintech, Europe</span></div>
       <br/>
       <div><span class="t-g">✓</span> <span class="t-o">Preferences saved → <span class="t-cy">job-search/preferences.md</span></span></div>
-      <div><span class="t-g">✓</span> <span class="t-o">Generating 6 search variations...</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Generating 7 search variations across tracks...</span></div>
       <div><span class="t-g">✓</span> <span class="t-o">Searching Indeed · LinkedIn · Google Jobs · ZipRecruiter</span></div>
-      <div><span class="t-g">✓</span> <span class="t-o">296 raw results → dedupe → filter → score</span></div>
-      <div><span class="t-g">✓</span> <span class="t-o">Shortlist: <span class="t-a">23 ranked matches</span> (🥇 6 Top · 🥈 11 Strong · 🥉 6 Worthy)</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">312 raw results → dedupe → filter → score</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Shortlist: <span class="t-a">27 ranked matches</span> (🥇 7 Top · 🥈 12 Strong · 🥉 8 Worthy)</span></div>
       <br/>
-      <div><span class="t-a">JobPulse</span>  <span class="t-o">Which ones interest you? (pick numbers, "all", or "top tier")</span></div>
+      <div><span class="t-a">JobPulse</span>  <span class="t-o">Which ones interest you? (numbers, "all", or "top tier")</span></div>
       <br/>
-      <div><span class="t-p">❯</span> <span class="t-c">1, 3</span></div>
+      <div><span class="t-p">❯</span> <span class="t-c">1, 4</span></div>
       <br/>
-      <div><span class="t-g">✓</span> <span class="t-o">Researching Acme AI (Glassdoor · LinkedIn · GitHub · Crunchbase)...</span></div>
-      <div><span class="t-g">✓</span> <span class="t-o">Customizing resume for Acme AI JD keywords...</span></div>
-      <div><span class="t-g">✓</span> <span class="t-o">Writing cover letter — 241 words, company-specific opener...</span></div>
-      <div><span class="t-g">✓</span> <span class="t-o">Generating interview prep — 5 behavioral Qs, 4 technical Qs...</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Researching Stripe (Glassdoor · LinkedIn · GitHub · Crunchbase)...</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Customizing resume — matched 14 JD keywords...</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Writing cover letter — 238 words, company-specific opener...</span></div>
+      <div><span class="t-g">✓</span> <span class="t-o">Generating interview prep — 6 behavioral Qs, 4 technical Qs...</span></div>
       <br/>
       <div><span class="t-y">📦</span> <span class="t-cy">Application package ready</span></div>
-      <div><span class="t-dim">   </span> <span class="t-o">job-search/acme-ai/research.md</span></div>
-      <div><span class="t-dim">   </span> <span class="t-o">job-search/acme-ai/jane-doe-resume-acme-ai.pdf</span></div>
-      <div><span class="t-dim">   </span> <span class="t-o">job-search/acme-ai/cover-letter.md</span></div>
-      <div><span class="t-dim">   </span> <span class="t-o">job-search/acme-ai/interview-prep.md</span></div>
+      <div><span class="t-dim">   </span> <span class="t-o">job-search/stripe/research.md</span></div>
+      <div><span class="t-dim">   </span> <span class="t-o">job-search/stripe/jane-doe-resume-stripe.pdf</span></div>
+      <div><span class="t-dim">   </span> <span class="t-o">job-search/stripe/cover-letter.md</span></div>
+      <div><span class="t-dim">   </span> <span class="t-o">job-search/stripe/interview-prep.md</span></div>
       <br/>
       <div><span class="t-a">JobPulse</span>  <span class="t-o">Want me to open the application form and walk you through it?</span></div>
     </div>
+  </div>
+</div>
+
+<!-- ═══ COMPARISON ════════════════════════════════════════ -->
+<div class="compare-wrap" id="compare">
+  <div class="compare-inner">
+    <div class="section-eyebrow">Why JobPulse</div>
+    <h2 class="section-h">Everything in one place</h2>
+    <p class="section-sub">Manual job searching is fragmented, repetitive, and slow. JobPulse handles the entire pipeline end-to-end.</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="hl">JobPulse</th>
+          <th>Manual search</th>
+          <th>LinkedIn Premium</th>
+          <th>Generic AI (ChatGPT)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Multi-board search (8 boards at once)</td>
+          <td><span class="chk">✓</span></td>
+          <td class="dim">One board at a time</td>
+          <td class="partial">LinkedIn only</td>
+          <td class="dim"><span class="cross">—</span></td>
+        </tr>
+        <tr>
+          <td>AI-tailored resume per job</td>
+          <td><span class="chk">✓</span> Auto-generated</td>
+          <td class="dim">Manual, hours per job</td>
+          <td class="dim"><span class="cross">—</span></td>
+          <td class="dim">Manual prompting</td>
+        </tr>
+        <tr>
+          <td>Targeted cover letter</td>
+          <td><span class="chk">✓</span> Auto-generated</td>
+          <td class="dim">Manual</td>
+          <td class="dim"><span class="cross">—</span></td>
+          <td class="dim">Manual prompting</td>
+        </tr>
+        <tr>
+          <td>Company research brief</td>
+          <td><span class="chk">✓</span> Structured</td>
+          <td class="dim">Manual googling</td>
+          <td class="partial">Partial</td>
+          <td class="dim">Manual prompting</td>
+        </tr>
+        <tr>
+          <td>Interview prep (STAR outlines)</td>
+          <td><span class="chk">✓</span> Role-specific</td>
+          <td class="dim"><span class="cross">—</span></td>
+          <td class="dim"><span class="cross">—</span></td>
+          <td class="dim">Manual prompting</td>
+        </tr>
+        <tr>
+          <td>Salary negotiation strategy</td>
+          <td><span class="chk">✓</span> Market-backed</td>
+          <td class="dim"><span class="cross">—</span></td>
+          <td class="partial">Salary data only</td>
+          <td class="dim">Manual prompting</td>
+        </tr>
+        <tr>
+          <td>Browser-assisted application</td>
+          <td><span class="chk">✓</span> With confirmation</td>
+          <td class="dim"><span class="cross">—</span></td>
+          <td class="dim"><span class="cross">—</span></td>
+          <td class="dim"><span class="cross">—</span></td>
+        </tr>
+        <tr>
+          <td>Data privacy (100% local)</td>
+          <td><span class="chk">✓</span> No cloud sync</td>
+          <td class="chk">✓</td>
+          <td class="cross dim">Stored on LinkedIn</td>
+          <td class="cross dim">Sent to OpenAI</td>
+        </tr>
+        <tr>
+          <td>Cost</td>
+          <td><span class="chk">$0</span></td>
+          <td class="chk">$0</td>
+          <td class="dim">~$40/mo</td>
+          <td class="dim">~$20/mo</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -458,45 +676,55 @@
   <div class="tryit-inner">
     <div class="section-eyebrow">Natural language first</div>
     <h2 class="section-h">Just describe what you want</h2>
-    <p class="section-sub">You don't need to learn commands. Talk to it like a recruiter.</p>
+    <p class="section-sub">No commands to memorize. Talk to it like a recruiter. The agent handles routing, search, and delivery.</p>
 
     <div class="commands">
       <div class="cmd-card">
         <span class="cmd-tag">Search</span>
-        <p class="cmd-quote">"Find remote blockchain BD roles in Europe, startup experience required"</p>
-        <p class="cmd-desc">Dual-track search — runs 10+ query variations, scores by relevance to your profile.</p>
+        <p class="cmd-quote">"Find remote senior PM roles in Europe, fintech or climate preferred"</p>
+        <p class="cmd-desc">Runs 7+ query variations, scores by relevance, tiered shortlist in ~60s.</p>
+      </div>
+      <div class="cmd-card">
+        <span class="cmd-tag">Niche</span>
+        <p class="cmd-quote">"Find blockchain business development roles in Europe, startup experience required"</p>
+        <p class="cmd-desc">Domain-specific scorer — tuned for Web3 BD signals across 8 boards.</p>
       </div>
       <div class="cmd-card">
         <span class="cmd-tag">Resume</span>
-        <p class="cmd-quote">"Review my resume and tell me what's hurting me"</p>
-        <p class="cmd-desc">Section-by-section score, common pitfalls checklist, improved version saved automatically.</p>
+        <p class="cmd-quote">"Review my resume and tell me what's hurting my chances"</p>
+        <p class="cmd-desc">Section-by-section score, pitfalls checklist, improved version saved locally.</p>
       </div>
       <div class="cmd-card">
         <span class="cmd-tag">Research</span>
-        <p class="cmd-quote">"What's the culture like at OHB Sweden? Any red flags?"</p>
+        <p class="cmd-quote">"What's the culture like at Revolut? Any red flags?"</p>
         <p class="cmd-desc">Browses Glassdoor, LinkedIn, Crunchbase, GitHub. Structured brief with red/green flags.</p>
       </div>
       <div class="cmd-card">
-        <span class="cmd-tag">Tailor</span>
-        <p class="cmd-quote">"Customize my resume for this Stripe senior engineer posting"</p>
-        <p class="cmd-desc">Re-keys bullets to JD vocabulary. Never fabricates. Saves both markdown and PDF.</p>
+        <span class="cmd-tag">Negotiate</span>
+        <p class="cmd-quote">"They offered me €85k. Help me counter-offer with market data"</p>
+        <p class="cmd-desc">Researches P25/median/P75 rates, drafts counter email, provides BATNA talking points.</p>
+      </div>
+      <div class="cmd-card">
+        <span class="cmd-tag">LinkedIn</span>
+        <p class="cmd-quote">"Optimize my LinkedIn headline and About section for recruiter search"</p>
+        <p class="cmd-desc">Audits each section, rewrites headline + summary, suggests high-value keywords.</p>
       </div>
       <div class="cmd-card">
         <span class="cmd-tag">Cover letter</span>
-        <p class="cmd-quote">"Write a cover letter for Acme Corp — keep it under 250 words"</p>
-        <p class="cmd-desc">3 paragraphs, company-specific opener pulled from research, real numbers from your resume.</p>
+        <p class="cmd-quote">"Write a cover letter for this Stripe PM role — max 250 words"</p>
+        <p class="cmd-desc">3 paragraphs, company-specific opener from research, real metrics from your resume.</p>
       </div>
       <div class="cmd-card">
         <span class="cmd-tag">Apply</span>
-        <p class="cmd-quote">"Apply to Windward for the satellite partnerships role"</p>
-        <p class="cmd-desc">Opens form in your browser, fills fields with your confirmation, submits only when you say so.</p>
+        <p class="cmd-quote">"Apply to Monzo for the product manager position"</p>
+        <p class="cmd-desc">Opens form, fills fields with your confirmation, uploads PDF, submits only when you say so.</p>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ═══ DELIVERABLES ══════════════════════════════════════ -->
-<div class="deliverables-wrap" id="deliverables">
+<div class="deliverables-wrap" id="deliverables" style="border-top:1px solid var(--border)">
   <div class="section-eyebrow">What you get</div>
   <h2 class="section-h">A complete application package, per job</h2>
   <p class="section-sub">Every output saved locally inside <code style="font-family:'JetBrains Mono',monospace;font-size:.88em;background:rgba(255,255,255,.05);padding:.1rem .4rem;border-radius:4px">job-search/[company]/</code></p>
@@ -505,7 +733,7 @@
     <div class="del-card">
       <div class="del-icon">🏢</div>
       <h3>Company research brief</h3>
-      <p>Culture, funding stage, tech stack, red/green flags, Glassdoor patterns, and Resume Customization Notes for the agent pipeline.</p>
+      <p>Culture, funding, tech stack, red/green flags, Glassdoor patterns, and Resume Customization Notes for the agent pipeline.</p>
       <span class="del-file">research.md</span>
     </div>
     <div class="del-card">
@@ -517,7 +745,7 @@
     <div class="del-card">
       <div class="del-icon">✍️</div>
       <h3>Cover letter</h3>
-      <p>3 paragraphs, 200–280 words. Company-specific opener, real metrics from your resume, no clichés.</p>
+      <p>3 paragraphs, 200–280 words. Company-specific opener, real metrics from your resume, zero clichés.</p>
       <span class="del-file">cover-letter.md</span>
     </div>
     <div class="del-card">
@@ -525,6 +753,18 @@
       <h3>Interview prep guide</h3>
       <p>5–6 behavioral questions with STAR outlines drawn from your actual resume. Technical Qs and smart questions to ask them.</p>
       <span class="del-file">interview-prep.md</span>
+    </div>
+    <div class="del-card">
+      <div class="del-icon">💰</div>
+      <h3>Salary negotiation playbook</h3>
+      <p>Market rate data (P25/median/P75), offer evaluation, counter email draft, and BATNA talking points.</p>
+      <span class="del-file">salary-negotiation.md</span>
+    </div>
+    <div class="del-card">
+      <div class="del-icon">💼</div>
+      <h3>LinkedIn optimizer</h3>
+      <p>Audit score per section, optimized headline formula, rewritten About section, skills gap analysis, completeness checklist.</p>
+      <span class="del-file">linkedin-optimized.md</span>
     </div>
     <div class="del-card">
       <div class="del-icon">🔗</div>
@@ -535,8 +775,86 @@
     <div class="del-card">
       <div class="del-icon">🌐</div>
       <h3>Browser-assisted apply</h3>
-      <p>Optional. Opens the form, fills fields section by section, uploads your customized PDF. Submits only on your explicit "submit".</p>
+      <p>Opens the form, fills section by section, uploads your customized PDF. Submits only on your explicit "submit" — never auto-submits.</p>
       <span class="del-file">/apply skill</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FAQ ═══════════════════════════════════════════════ -->
+<div class="faq-wrap" id="faq">
+  <div class="faq-inner">
+    <div class="section-eyebrow">FAQ</div>
+    <h2 class="section-h">Common questions</h2>
+    <p class="section-sub">Everything you need to know before getting started.</p>
+
+    <div class="faq-list">
+
+      <div class="faq-item open">
+        <div class="faq-q">Do I need coding skills to use JobPulse?</div>
+        <div class="faq-a">
+          No coding required. The only setup is: install Claude Code, run two plugin commands, restart. After that everything is natural language —
+          just describe what you want and the agent guides you step by step. The Python scripts run invisibly in the background.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Does it work for non-tech roles?</div>
+        <div class="faq-a">
+          Yes. JobPulse works for any role — product, sales, BD, finance, marketing, operations, design, research, academia, and more.
+          The default scorer is tuned for tech, but you can tell it your industry and it will run domain-specific search queries.
+          For niche markets (space, deep tech, blockchain, climate), specialized scorers are built-in.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">How many job boards does it search, and which ones?</div>
+        <div class="faq-a">
+          JobPulse searches up to 8 boards simultaneously: <strong>Indeed, LinkedIn, Glassdoor, ZipRecruiter, Google Jobs, Bayt, Naukri, and BDJobs</strong>.
+          Coverage varies by country — for European searches, Indeed + LinkedIn + Google Jobs give the best results.
+          JobSpy (the underlying library) handles all scraping with no API keys required for most boards.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Is my resume and personal data safe?</div>
+        <div class="faq-a">
+          Yes — everything is 100% local. Your resume, search preferences, cover letters, and research briefs are all written to a
+          <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">job-search/</code> folder on your own machine.
+          Nothing is uploaded to any server. No telemetry, no cloud sync, no accounts. The only data that leaves your machine
+          are the search queries sent to job boards (same as opening a browser tab).
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">How is this different from LinkedIn Premium?</div>
+        <div class="faq-a">
+          LinkedIn Premium gives you InMail credits, salary data, and who viewed your profile — useful, but narrow.
+          JobPulse searches 8 boards (not just LinkedIn), generates a tailored resume + cover letter + interview prep for every job you select,
+          helps you negotiate your offer, and optionally fills the application form. It's a full job-hunt pipeline, not a single-platform upgrade.
+          And it's $0 vs. ~$40/month.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">What countries and languages are supported?</div>
+        <div class="faq-a">
+          Job board search works globally — Indeed supports 50+ countries, LinkedIn is worldwide, Google Jobs covers most markets.
+          Language: the agent works in English by default, but you can instruct it to generate cover letters or resume bullets in another language.
+          Country-specific flags (e.g. <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">country_indeed="sweden"</code>) are set automatically based on your stated location preference.
+          Note: Glassdoor and ZipRecruiter are US/CA focused; for European searches the agent skips them automatically.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Can I use it without a paid Claude plan?</div>
+        <div class="faq-a">
+          Claude Code requires an active Anthropic plan (starts at $20/month). JobPulse itself is free and open source — it adds no cost
+          on top of Claude. The job scraping, scoring, and file I/O use no extra API calls. Agent runs (research, resume customization, etc.) do
+          consume Claude context, but a typical full pipeline for 3 jobs is well within the standard monthly quota.
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -558,8 +876,8 @@
 
 <!-- ═══ CTA FINAL ═════════════════════════════════════════ -->
 <div class="cta-final">
-  <h2>Ready to run your job search<br/>on autopilot?</h2>
-  <p>Free, open source, everything runs on your machine.</p>
+  <h2>Stop searching manually.<br/>Run your job hunt on autopilot.</h2>
+  <p>Free, open source, 8 boards, 8 agents — everything on your machine.</p>
   <div class="hero-ctas">
     <a class="btn btn-primary" href="#quickstart">Install the plugin →</a>
     <a class="btn btn-ghost" href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank" rel="noopener">
@@ -577,7 +895,7 @@
     <span style="margin:0 .6rem;color:var(--border)">|</span>
     Apache 2.0
     <span style="margin:0 .6rem;color:var(--border)">|</span>
-    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md" target="_blank" rel="noopener">Blueprint v0.3.1</a>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md" target="_blank" rel="noopener">Blueprint v0.4.0</a>
   </div>
   <div class="footer-links">
     <a href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank" rel="noopener">GitHub</a>
@@ -586,6 +904,18 @@
     <a href="https://discord.gg/babcVNJBet" target="_blank" rel="noopener">Discord</a>
   </div>
 </footer>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
 
 </body>
 </html>
