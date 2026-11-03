@@ -88,8 +88,20 @@ Save to `job-search/linkedin-optimized.md`:
 | Experience | X/5 | 5/5 | ... |
 | Skills | X/5 | 5/5 | ... |
 
-## Optimized headline
-[New headline text]
+## Optimized headline — four A/B variants
+If `job-search/positioning-prior.md` already lists four headline variants, copy
+them here verbatim and do not invent a fifth. Otherwise, write four variants
+that each follow the headline formula above but vary on one axis (seniority
+framing / differentiator / value prop / industry). Log them into
+`job-search/linkedin-ab-test.md` with a rotation schedule — one variant live
+per week for four weeks — and treat the 30-day InMail-conversion data as the
+same A/B signal Jobs Radar's demo-persona simulation uses. The winner is
+decided by the log, never by taste.
+
+1. [Variant 1]
+2. [Variant 2]
+3. [Variant 3]
+4. [Variant 4]
 
 ## Optimized About section
 [Full rewritten text]
