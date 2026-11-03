@@ -47,6 +47,8 @@ All user data stays local in `job-search/`:
 ```
 job-search/
 ├── preferences.md                           ← Search criteria (from onboarding)
+├── positioning-prior.md                     ← Jobs Radar exec-register brief (thesis, summary, bullets, headline variants)
+├── linkedin-ab-test.md                      ← 30-day headline A/B rotation + metrics
 ├── [name]-resume.{md,pdf}                   ← Base resume
 ├── jobs-final.json                          ← Scored, ranked job shortlist
 └── [company-slug]/
