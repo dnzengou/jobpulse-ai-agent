@@ -9,6 +9,8 @@ AI-powered job search assistant. Searches 8 job boards, handles resumes, researc
 - `get_supported_sites` — List all 8 supported job boards
 - `get_supported_countries` — List supported countries
 - `get_search_tips` — Search best practices
+- `log_outcome` — Append one application outcome event to the local tracker (JSONL, no network)
+- `list_outcomes` — Read the local application tracker, newest-first, filterable by event or company
 
 ## Skills
 
@@ -17,6 +19,7 @@ Read the skill files in `skills/` for detailed workflow guidance:
 - `skills/findmeajob/SKILL.md` — Main job search workflow (onboarding → search → research → customize → optionally apply)
 - `skills/apply/SKILL.md` — Browser-assisted application — opens the form, fills fields with user confirmation, submits only on explicit "submit"
 - `skills/setup/SKILL.md` — Configuration management (view/edit preferences, reset data, manage resumes)
+- `skills/track/SKILL.md` — Local application tracker (log outcomes, review funnel, flag stale applications)
 
 ## Agents
 
@@ -51,6 +54,7 @@ job-search/
 ├── linkedin-ab-test.md                      ← 30-day headline A/B rotation + metrics
 ├── [name]-resume.{md,pdf}                   ← Base resume
 ├── jobs-final.json                          ← Scored, ranked job shortlist
+├── outcomes.jsonl                           ← Local application tracker (append-only JSONL)
 └── [company-slug]/
     ├── research.md                          ← Company research brief
     ├── apply-link.md                        ← Apply URL + application status
