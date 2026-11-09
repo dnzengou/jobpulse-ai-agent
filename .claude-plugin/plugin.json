@@ -1,15 +1,15 @@
 {
-  "name": "jobs-for-ai-agents",
+  "name": "jobpulse-ai-agent",
   "description": "Your AI job-search wingman — find roles, polish your resume, research companies, tailor applications, and apply with browser assistance — all from Claude Code.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {
-    "name": "JCodesMore",
-    "url": "https://github.com/JCodesMore"
+    "name": "dnzengou",
+    "url": "https://github.com/dnzengou"
   },
-  "homepage": "https://github.com/JCodesMore/jobs-for-ai-agents",
-  "repository": "https://github.com/JCodesMore/jobs-for-ai-agents",
+  "homepage": "https://jobpulse-ai-agent.vercel.app",
+  "repository": "https://github.com/dnzengou/jobpulse-ai-agent",
   "bugs": {
-    "url": "https://github.com/JCodesMore/jobs-for-ai-agents/issues"
+    "url": "https://github.com/dnzengou/jobpulse-ai-agent/issues"
   },
   "license": "Apache-2.0",
   "keywords": [
@@ -17,8 +17,13 @@
     "resume",
     "job-search",
     "career",
+    "cover-letter",
+    "interview-prep",
+    "salary-negotiation",
+    "linkedin",
     "mcp",
-    "claude-code"
+    "claude-code",
+    "ai-agent"
   ],
   "mcpServers": {
     "jobspy": {

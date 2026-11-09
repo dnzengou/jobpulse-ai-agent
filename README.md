@@ -6,11 +6,11 @@
 
 Search 8 job boards, get company research, tailor your resume, write cover letters, prep for interviews, and apply — all from a single Claude command.
 
-[![Version](https://img.shields.io/badge/version-0.3.1-7c3aed?style=for-the-badge)](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md)
+[![Version](https://img.shields.io/badge/version-0.4.0-7c3aed?style=for-the-badge)](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md)
 [![License](https://img.shields.io/badge/license-Apache%202.0-06b6d4?style=for-the-badge)](LICENSE)
 [![Discord](https://img.shields.io/badge/Community-Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/babcVNJBet)
 
-[Quick Start](#quick-start) · [Live Site](https://jobpulse-ai-agent.vercel.app) · [Blueprint](BLUEPRINT.md) · [Discord](https://discord.gg/babcVNJBet)
+[Quick Start](#quick-start) · [Live Site](https://jobpulse-ai-agent.vercel.app) · [Blueprint](BLUEPRINT.md) · [Facts](FACTS.md) · [Integrate](INTEGRATE.md) · [Changelog](CHANGELOG.md) · [Discord](https://discord.gg/babcVNJBet)
 
 </div>
 
@@ -28,13 +28,15 @@ Search 8 job boards, get company research, tailor your resume, write cover lette
 **1. Install the plugin** — inside Claude Code, run:
 
 ```
-/plugin marketplace add JCodesMore/jcodesmore-plugins
-/plugin install jobs-for-ai-agents@jcodesmore-plugins
+/plugin marketplace add dnzengou/jobpulse-ai-agent
+/plugin install jobpulse-ai-agent@jobpulse-ai-agent
 ```
 
 **2. Restart Claude Code** — quit the app and reopen.
 
 **3. Run `/findmeajob`** — answer 3 questions and it does the rest.
+
+> Not using the marketplace yet? Clone the repo and point Claude Code at it: `claude --plugin-dir /path/to/jobpulse-ai-agent` (see [Advanced install](#user-content-advanced-install-without-the-marketplace)).
 
 ## Try it
 
@@ -47,7 +49,7 @@ Talk to Claude like a friend:
 
 ## What's inside
 
-**Three skills** · **Six agents** · **One MCP server** (5 tools, 8 job boards) · **Browser-assisted apply**
+**Three skills** · **Eight agents** · **One MCP server** (5 tools, 8 job boards) · **Browser-assisted apply**
 
 | Skill | What it does |
 |---|---|
@@ -63,10 +65,12 @@ Talk to Claude like a friend:
 | `resume-customizer` | JD-tailored resume (re-keyed, not fabricated) |
 | `cover-letter-writer` | 3-paragraph targeted letter, 200–280 words |
 | `interview-prepper` | STAR-outline behavioral Qs + technical Qs + questions to ask |
+| `salary-negotiator` | Market rate research + counter-offer email + BATNA talking points |
+| `linkedin-optimizer` | Profile audit + headline/About/experience rewrites for recruiter + ATS visibility |
 
 ## Community
 
-[**Discord**](https://discord.gg/babcVNJBet) — chat, help, show-and-tell · [**Issues**](https://github.com/JCodesMore/jobs-for-ai-agents/issues) — bugs & feature requests · [**Contribute**](CONTRIBUTING.md) · [**More plugins**](https://github.com/JCodesMore/jcodesmore-plugins)
+[**Discord**](https://discord.gg/babcVNJBet) — chat, help, show-and-tell · [**Issues**](https://github.com/dnzengou/jobpulse-ai-agent/issues) — bugs & feature requests · [**Contribute**](CONTRIBUTING.md) · [**Security**](SECURITY.md)
 
 <details>
 <summary><b>Where your data lives</b></summary>
@@ -111,8 +115,8 @@ More help in the [Discord](https://discord.gg/babcVNJBet).
 If you'd rather clone and run it directly:
 
 ```bash
-git clone https://github.com/JCodesMore/jobs-for-ai-agents.git
-cd jobs-for-ai-agents
+git clone https://github.com/dnzengou/jobpulse-ai-agent.git
+cd jobpulse-ai-agent
 claude --plugin-dir .
 ```
 
@@ -130,8 +134,14 @@ claude --plugin-dir .
 
 ## License
 
-[Apache License 2.0](LICENSE) — © 2026 JCodesMore
+[Apache License 2.0](LICENSE) — © 2026 JobPulse AI Agent contributors
 
----
+## For AI agents & LLM search engines
 
-*Part of [jcodesmore-plugins](https://github.com/JCodesMore/jcodesmore-plugins).*
+- [`FACTS.md`](FACTS.md) — every claim on every surface, mapped to the code or doc that proves it.
+- [`llms.txt`](llms.txt) — curated map of the repo for LLM-powered search ([llmstxt.org](https://llmstxt.org)).
+- [`ai.txt`](ai.txt) — AI-use policy (what you may reuse, cite, and train on).
+- [`INTEGRATE.md`](INTEGRATE.md) — how other agents, apps, and CI call the MCP server.
+- [`CITATION.cff`](CITATION.cff) — machine-readable citation metadata.
+
+If an AI tool cites JobPulse, we want it cited on something that's actually true — verify against the links above.

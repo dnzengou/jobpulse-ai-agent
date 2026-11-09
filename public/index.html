@@ -5,13 +5,137 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>JobPulse AI Agent — Find, apply, and land your next role from Claude</title>
   <meta name="description" content="AI job-search agent for Claude Code. Searches 8 boards, customizes your resume, writes cover letters, preps interviews, negotiates offers, and fills applications — 100% local, no API keys."/>
+  <link rel="canonical" href="https://jobpulse-ai-agent.vercel.app/"/>
+
+  <!-- Open Graph -->
   <meta property="og:title" content="JobPulse AI Agent"/>
   <meta property="og:description" content="Find, research, and apply to jobs without leaving Claude Code. No API keys. Your data stays local. Works for any role, any industry."/>
   <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://jobpulse-ai-agent.vercel.app/"/>
+  <meta property="og:site_name" content="JobPulse AI Agent"/>
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="JobPulse AI Agent"/>
+  <meta name="twitter:description" content="Your AI agent for the entire job hunt. 8 boards searched, resume tailored, cover letter written, interviews prepped — all from Claude Code. Open source, local-first."/>
+
+  <!-- AI-agent discoverability -->
+  <link rel="alternate" type="text/plain" title="LLM-friendly site map (llms.txt)" href="/llms.txt"/>
+  <link rel="alternate" type="text/plain" title="AI-use policy (ai.txt)" href="/ai.txt"/>
+
   <meta name="theme-color" content="#0a0a0f"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+  <!-- Structured data: SoftwareApplication. All values map to repo FACTS.md. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "JobPulse AI Agent",
+    "alternateName": ["JobPulse", "jobpulse-ai-agent"],
+    "applicationCategory": "DeveloperApplication",
+    "applicationSubCategory": "Claude Code Plugin",
+    "operatingSystem": "macOS, Linux, Windows",
+    "description": "A Claude Code plugin that runs the whole job search on your own machine — 8 job boards, company research, resume customization, cover letters, interview prep, salary negotiation, LinkedIn optimization, and browser-assisted apply. No API keys. No telemetry.",
+    "softwareVersion": "0.4.0",
+    "license": "https://www.apache.org/licenses/LICENSE-2.0",
+    "url": "https://jobpulse-ai-agent.vercel.app/",
+    "downloadUrl": "https://github.com/dnzengou/jobpulse-ai-agent",
+    "sameAs": [
+      "https://github.com/dnzengou/jobpulse-ai-agent",
+      "https://github.com/dnzengou/jobpulse-ai-agent/blob/main/FACTS.md"
+    ],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "dnzengou", "url": "https://github.com/dnzengou" },
+    "codeRepository": "https://github.com/dnzengou/jobpulse-ai-agent",
+    "programmingLanguage": ["Python", "JavaScript"],
+    "keywords": "job search, resume, cover letter, interview prep, salary negotiation, linkedin, mcp, claude code, ai agent"
+  }
+  </script>
+
+  <!-- Structured data: HowTo (quick start). Steps mirror /README.md § Quick Start. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Install JobPulse AI Agent in Claude Code",
+    "description": "Install the plugin, restart Claude Code, and run /findmeajob.",
+    "totalTime": "PT60S",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Install the plugin", "text": "Inside Claude Code, run: /plugin marketplace add dnzengou/jobpulse-ai-agent then /plugin install jobpulse-ai-agent@jobpulse-ai-agent" },
+      { "@type": "HowToStep", "position": 2, "name": "Restart Claude Code", "text": "Fully quit Claude Code and reopen so the plugin registers and installs its Python dependencies." },
+      { "@type": "HowToStep", "position": 3, "name": "Run /findmeajob", "text": "Type /findmeajob and answer the onboarding questions; the agent handles search, research, resume customization, and delivery." }
+    ]
+  }
+  </script>
+
+  <!-- Structured data: FAQPage. Questions and answers verbatim from the FAQ below. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do I need coding skills to use JobPulse?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No coding required. Install Claude Code, run two plugin commands, restart. After that everything is natural language — just describe what you want and the agent guides you step by step."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does JobPulse work for non-tech roles?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. JobPulse works for any role — product, sales, BD, finance, marketing, operations, design, research, academia. The default scorer is tuned for tech but adapts to your stated industry; specialized scorers exist for niche markets."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How many job boards does JobPulse search?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Up to 8 boards simultaneously: Indeed, LinkedIn, Glassdoor, ZipRecruiter, Google Jobs, Bayt, Naukri, and BDJobs. Coverage varies by country — JobSpy handles the scraping and requires no API keys for most boards."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my resume and personal data safe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Everything is 100% local. Resume, preferences, cover letters, and research briefs are written to a job-search/ folder on your machine. Nothing is uploaded to any server. No telemetry, no cloud sync, no accounts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is JobPulse different from LinkedIn Premium?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "LinkedIn Premium is a single-platform upgrade. JobPulse searches 8 boards, generates a tailored resume + cover letter + interview prep for every job, helps you negotiate your offer, and optionally fills the application form — for $0."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What countries and languages does JobPulse support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Job board search works globally — Indeed covers 50+ countries, LinkedIn is worldwide, Google Jobs covers most markets. The agent works in English by default but can generate cover letters or resume bullets in another language on request."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use JobPulse without a paid Claude plan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code requires an active Anthropic plan. JobPulse itself is free and open source — it adds no cost on top of Claude. Job scraping, scoring, and file I/O use no extra API calls."
+        }
+      }
+    ]
+  }
+  </script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -159,10 +283,18 @@
     .code-block{
       background:#0c0c13;border:1px solid var(--border);border-radius:8px;
       padding:.7rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;
-      display:flex;align-items:center;gap:.6rem;overflow-x:auto;
+      display:flex;align-items:center;gap:.6rem;overflow-x:auto;position:relative;
     }
     .code-block .prompt{color:var(--green);user-select:none;flex-shrink:0}
-    .code-block .cmd{color:var(--text)}
+    .code-block .cmd{color:var(--text);flex:1}
+    .copy-btn{
+      background:transparent;border:1px solid var(--border);color:var(--muted);
+      font:600 .7rem/1 'Inter',sans-serif;letter-spacing:.04em;text-transform:uppercase;
+      padding:.3rem .55rem;border-radius:5px;cursor:pointer;flex-shrink:0;
+      transition:border-color .15s,color .15s,background .15s;
+    }
+    .copy-btn:hover{border-color:var(--accent);color:var(--accent-light);background:var(--accent-glow)}
+    .copy-btn.copied{border-color:var(--green);color:var(--green);background:rgba(16,185,129,.12)}
     .step-tag{
       display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.06em;
       text-transform:uppercase;padding:.15rem .5rem;border-radius:4px;margin-bottom:.5rem;
@@ -477,11 +609,13 @@
         <p>Inside Claude Code, run these two commands. Dependencies install automatically in the background — Python venv, JobSpy, pandas.</p>
         <div class="code-block">
           <span class="prompt">/</span>
-          <span class="cmd">plugin marketplace add JCodesMore/jcodesmore-plugins</span>
+          <span class="cmd" data-copy="/plugin marketplace add dnzengou/jobpulse-ai-agent">plugin marketplace add dnzengou/jobpulse-ai-agent</span>
+          <button class="copy-btn" type="button" aria-label="Copy install command">Copy</button>
         </div>
         <div class="code-block" style="margin-top:.45rem">
           <span class="prompt">/</span>
-          <span class="cmd">plugin install jobs-for-ai-agents@jcodesmore-plugins</span>
+          <span class="cmd" data-copy="/plugin install jobpulse-ai-agent@jobpulse-ai-agent">plugin install jobpulse-ai-agent@jobpulse-ai-agent</span>
+          <button class="copy-btn" type="button" aria-label="Copy install command">Copy</button>
         </div>
         <p style="margin-top:.6rem;font-size:.78rem;color:var(--muted2)">
           Or clone and run locally:
@@ -517,7 +651,8 @@
         <p>Type the slash command or describe what you want in plain language. The agent guides you through the rest — one question at a time, no form to fill.</p>
         <div class="code-block">
           <span class="prompt">/</span>
-          <span class="cmd">findmeajob</span>
+          <span class="cmd" data-copy="/findmeajob">findmeajob</span>
+          <button class="copy-btn" type="button" aria-label="Copy command">Copy</button>
         </div>
         <p style="margin-top:.45rem;font-size:.78rem;color:var(--muted2)">
           Or naturally: <em style="color:var(--muted)">"Find remote product manager jobs in Europe, fintech preferred"</em>
@@ -900,7 +1035,10 @@
   <div class="footer-links">
     <a href="https://github.com/dnzengou/jobpulse-ai-agent" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/dnzengou/jobpulse-ai-agent/issues" target="_blank" rel="noopener">Issues</a>
-    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md" target="_blank" rel="noopener">Docs</a>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/FACTS.md" target="_blank" rel="noopener">Facts</a>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/INTEGRATE.md" target="_blank" rel="noopener">Integrate</a>
+    <a href="https://github.com/dnzengou/jobpulse-ai-agent/blob/main/SECURITY.md" target="_blank" rel="noopener">Security</a>
+    <a href="/llms.txt" rel="noopener">For AI agents</a>
     <a href="https://discord.gg/babcVNJBet" target="_blank" rel="noopener">Discord</a>
   </div>
 </footer>
@@ -913,6 +1051,31 @@
       const isOpen = item.classList.contains('open');
       document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
       if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // Copy-to-clipboard for install commands
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const cmd = btn.parentElement.querySelector('[data-copy]');
+      if (!cmd) return;
+      try {
+        await navigator.clipboard.writeText(cmd.dataset.copy);
+        const original = btn.textContent;
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1600);
+      } catch {
+        btn.textContent = 'Press ⌘C';
+        const range = document.createRange();
+        range.selectNodeContents(cmd);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
     });
   });
 </script>
