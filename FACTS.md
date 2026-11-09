@@ -4,7 +4,7 @@
 
 **No cloaking. No hidden text. No fabricated reviews, ratings, downloads, or user counts.** If we can't prove it from the repository, we don't say it.
 
-Last reviewed: 2026-11-08 · Source of truth version: see [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) → `"version"`.
+Last reviewed: 2026-11-09 · Source of truth version: see [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) → `"version"`.
 
 ---
 
@@ -24,11 +24,13 @@ Last reviewed: 2026-11-08 · Source of truth version: see [`.claude-plugin/plugi
 | Claim | Where it lives in the repo |
 |---|---|
 | Searches **8 job boards** (Indeed, LinkedIn, Glassdoor, ZipRecruiter, Google Jobs, Bayt, Naukri, BDJobs) | [`mcp/job_server.py`](mcp/job_server.py) → `VALID_SITES` constant (8 entries) |
-| **MCP server exposes 5 tools** (`search_jobs`, `search_jobs_batch`, `get_supported_sites`, `get_supported_countries`, `get_search_tips`) | [`mcp/job_server.py`](mcp/job_server.py) — one `@mcp.tool()` decorator per tool |
+| **MCP server exposes 7 tools** (`search_jobs`, `search_jobs_batch`, `get_supported_sites`, `get_supported_countries`, `get_search_tips`, `log_outcome`, `list_outcomes`) | [`mcp/job_server.py`](mcp/job_server.py) — one `@mcp.tool()` decorator per tool |
 | **8 agents** (resume-reviewer, resume-builder, company-researcher, resume-customizer, cover-letter-writer, interview-prepper, salary-negotiator, linkedin-optimizer) | [`agents/`](agents/) — one `.md` file per agent |
-| **3 skills** (findmeajob, apply, setup) | [`skills/findmeajob/SKILL.md`](skills/findmeajob/SKILL.md), [`skills/apply/SKILL.md`](skills/apply/SKILL.md), [`skills/setup/SKILL.md`](skills/setup/SKILL.md) |
+| **4 skills** (findmeajob, apply, setup, track) | [`skills/findmeajob/SKILL.md`](skills/findmeajob/SKILL.md), [`skills/apply/SKILL.md`](skills/apply/SKILL.md), [`skills/setup/SKILL.md`](skills/setup/SKILL.md), [`skills/track/SKILL.md`](skills/track/SKILL.md) |
+| **Scorer works for non-tech roles** (tech, product, sales-bd, ops, design, or no filter) | [`skills/findmeajob/scripts/process_jobs.py`](skills/findmeajob/scripts/process_jobs.py) → `TRACKS` registry and `--track` CLI flag; default is `any` so non-tech titles are not filtered out |
 | Browser-assisted apply **requires explicit user confirmation before submission** | [`skills/apply/SKILL.md`](skills/apply/SKILL.md) → "What you never do" section: "Never submit without the word 'submit' from the user." |
 | **Underlying scraper is JobSpy** | [`mcp/requirements.txt`](mcp/requirements.txt) → `python-jobspy`; [`mcp/job_server.py`](mcp/job_server.py) → `from jobspy import scrape_jobs` |
+| **Application tracker is a local append-only JSONL file** at `job-search/outcomes.jsonl` — no telemetry, no cloud sync | [`mcp/job_server.py`](mcp/job_server.py) → `log_outcome()`/`list_outcomes()` write and read `job-search/outcomes.jsonl` using the working directory only; [`INTEGRATE.md`](INTEGRATE.md) → "Trajectory / outcome log" |
 
 ## Privacy and data-handling claims
 

@@ -1,6 +1,6 @@
-# Jobs for AI Agents — Production Blueprint v0.4.0
+# JobPulse AI Agent — Production Blueprint v0.4.0
 
-*Updated: 2026-05-21*
+*Updated: 2026-11-09*
 
 ---
 
@@ -61,7 +61,7 @@ skills/
   findmeajob/
     SKILL.md               Main workflow: onboarding → search → present → customize → apply
     scripts/
-      process_jobs.py      Dedupe + filter + score pipeline
+      process_jobs.py      Track-aware dedupe + filter + score pipeline
     references/
       onboarding.md        Questionnaire flow (one question at a time)
       deep-search.md       Search algorithm docs
@@ -70,6 +70,8 @@ skills/
     SKILL.md               Browser-assisted application (fill + confirm + submit)
   setup/
     SKILL.md               Config management (view/edit prefs, reset data)
+  track/
+    SKILL.md               Local application tracker (log outcomes, review funnel)
 
 agents/
   resume-reviewer.md       Score + improve existing resume
@@ -98,6 +100,24 @@ references/
 | `search_jobs_batch` | Multi-query search (4-10 queries, merged) — **preferred** |
 | `get_supported_sites` | Lists all 8 boards with descriptions |
 | `get_supported_countries` | Lists countries for Indeed/Glassdoor |
+| `get_search_tips` | Query-planning cheat sheet for the model |
+| `log_outcome` | Append one event (shortlisted / customized / applied / responded / interview / offer / rejected / withdrawn) to `job-search/outcomes.jsonl`. Local-only. |
+| `list_outcomes` | Read `job-search/outcomes.jsonl`; filter by event or company. |
+
+### Role tracks (for `process_jobs.py`)
+
+The scorer ships with a `TRACKS` registry (`tech`, `product`, `sales-bd`,
+`ops`, `design`, `any`) swapped in via `--track`. Default is `any`, which
+applies no title filter — non-tech roles survive the pipeline. Each track
+defines its own include/exclude regex and keyword weights. Add a track by
+appending to `TRACKS` in `skills/findmeajob/scripts/process_jobs.py`.
+
+## Credibility & discoverability
+
+Verifiable claims live in [`FACTS.md`](FACTS.md). LLM-first site map in
+[`llms.txt`](llms.txt) (mirrored to `public/`). AI-use policy in
+[`ai.txt`](ai.txt). Integration contract for third-party agents in
+[`INTEGRATE.md`](INTEGRATE.md). Security posture in [`SECURITY.md`](SECURITY.md).
 | `get_search_tips` | Best practices for queries and filters |
 
 **search_jobs_batch** is the key performance win: one context hit instead of N, merged results with `_query_term` tag, then piped to process_jobs.py for scoring.

@@ -7,11 +7,21 @@ The source of truth for the current version is [`.claude-plugin/plugin.json`](.c
 ## [Unreleased]
 
 ### Added
+- `skills/findmeajob/scripts/process_jobs.py` is now **track-aware**. A `TRACKS` registry (`tech`, `product`, `sales-bd`, `ops`, `design`, `any`) swaps title filters and keyword weights per role family; the CLI exposes it via `--track` and the default is `any` so non-tech titles aren't silently dropped. The landing page's "any role, any industry" claim now actually survives the scorer.
+- `/findmeajob` SKILL now wires `--track` and calls `log_outcome` at the `customized` and `applied` lifecycle points so the tracker stays current without manual nudging.
+
+### Fixed
+- `scripts/ensure-deps.mjs`: pip install timeout 120s → 300s. Cold install of pandas + python-jobspy + mcp can exceed 2 min on slower networks; the hook was timing out silently and leaving `ensure-deps` reporting success while the venv was incomplete.
+- `skills/findmeajob/scripts/process_jobs.py`: `os.makedirs(os.path.dirname(…))` crashed when the output path had no directory component (bare filename). Falls back to `.` now.
+
+## [0.4.1] — 2026-11-08
+
+### Added
 - `FACTS.md` — every public claim mapped to the code or doc that proves it.
 - `llms.txt` and `ai.txt` at the repo root and under `public/` for AI-agent discoverability (per [llmstxt.org](https://llmstxt.org)).
 - `CHANGELOG.md`, `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `CITATION.cff`.
 - `INTEGRATE.md` — how other agents, SDKs, apps, and CI call the MCP server.
-- `/track` skill and `log_outcome` MCP tool — local JSONL application tracker (`job-search/outcomes.jsonl`) that doubles as the trajectory data for future skill evolution.
+- `/track` skill and `log_outcome`/`list_outcomes` MCP tools — local JSONL application tracker (`job-search/outcomes.jsonl`) that doubles as the trajectory data for future skill evolution.
 - Landing page: JSON-LD structured data (SoftwareApplication, FAQPage, HowTo), `robots.txt`, `sitemap.xml`, copy-to-clipboard on install commands, Twitter card meta, canonical URL.
 
 ### Fixed
