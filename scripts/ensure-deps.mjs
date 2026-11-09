@@ -116,10 +116,13 @@ if (!pipPath) {
 
 log('Installing Python dependencies...');
 
+// pandas + python-jobspy + mcp can take > 2 min on cold networks.
+// Keep the SessionStart hook within a bounded window, but give the cold
+// path enough room that it doesn't fail on first launch.
 const installResult = spawnSync(pipPath, ['install', '-r', requirements, '--quiet'], {
   cwd: mcpDir,
   encoding: 'utf8',
-  timeout: 120_000,
+  timeout: 300_000,
   windowsHide: true,
 });
 

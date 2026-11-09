@@ -101,15 +101,30 @@ Use `hours_old=168` (7 days) and `results_wanted=50` per query for volume.
 
 ### 4d. Process results
 
+Pick a `--track` that matches the user's role family. The default is `any`
+(no title filter — scores by salary/seniority only). Use a specific track
+when the user is clearly targeting one so wrong-domain titles are excluded
+and track-specific keywords lift the right postings.
+
+| Track | For roles like |
+|---|---|
+| `tech` | Software engineers, SRE, DevOps, ML/AI, data engineers |
+| `product` | PM, product owners, product designers, product marketing |
+| `sales-bd` | AEs, BDRs, partnerships, growth, enterprise sales |
+| `ops` | Business ops, chief of staff, RevOps, people ops, strategy |
+| `design` | UX, UI, product design, design systems, brand |
+| `any` | **Default** — everything that isn't a contract listing |
+
 ```bash
 python ${CLAUDE_PLUGIN_ROOT}/skills/findmeajob/scripts/process_jobs.py \
   --input <file1> [<file2> ...] \
   --profile job-search/preferences.md \
   --resume  job-search/[name]-resume.md \
   --output  job-search/jobs-final.json \
-  [--include-hybrid]     # if user wants hybrid roles
-  [--include-onsite]     # if user is open to onsite
-  [--min-score 5]        # raise to tighten shortlist
+  --track   <track>          # see table above; omit for default `any`
+  [--include-hybrid]         # if user wants hybrid roles
+  [--include-onsite]         # if user is open to onsite
+  [--min-score 5]            # raise to tighten shortlist
 ```
 
 Report the processor output (how many loaded, deduped, filtered, final count).
@@ -144,6 +159,12 @@ For each job:
 
 Agents 2, 3, 4 all depend on agent 1's output — dispatch 1 first, then 2/3/4 in parallel.
 
+After each customization completes, log a `customized` outcome via the
+`log_outcome` MCP tool so the user's `job-search/outcomes.jsonl` reflects
+reality — one line per company. See `skills/track/SKILL.md` for the full
+event vocabulary. Logging is local-only and idempotent-ish (append-only);
+don't log the same event twice in the same session.
+
 ## Step 7 — Delivery
 
 > **Your application packages are ready!**
@@ -171,7 +192,7 @@ If the user wants browser-assisted apply for a specific job:
 2. Use the `browser-use` skill to navigate to the apply URL.
 3. Walk through form fields one section at a time — present what you see, ask the user to confirm/correct each answer before filling.
 4. **Never submit without explicit confirmation:** "Ready to submit? I'll click Submit now — say yes to proceed."
-5. After submission: record the date in `job-search/[company-slug]/apply-link.md`.
+5. After submission: record the date in `job-search/[company-slug]/apply-link.md`, and call `log_outcome` with `event: "applied"` so the tracker funnel is up to date.
 
 ## Subsequent Runs
 
