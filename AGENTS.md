@@ -14,9 +14,10 @@ AI-powered job search assistant. Searches 8 job boards, handles resumes, researc
 
 Read the skill files in `skills/` for detailed workflow guidance:
 
-- `skills/findmeajob/SKILL.md` — Main job search workflow (onboarding → search → research → customize → optionally apply)
+- `skills/findmeajob/SKILL.md` — Main job search workflow (onboarding → search → research → customize → optionally apply → pipeline tracker)
 - `skills/apply/SKILL.md` — Browser-assisted application — opens the form, fills fields with user confirmation, submits only on explicit "submit"
 - `skills/setup/SKILL.md` — Configuration management (view/edit preferences, reset data, manage resumes)
+- `skills/agent-seo/SKILL.md` — Standalone agent-SEO deliverable: emits llms.txt, agents.json, JSON-LD (Organization, SoftwareApplication, FAQ, HowTo, JobPosting), robots.txt, sitemap.xml tuned for AI answer engines. Portable to any site or product.
 
 ## Agents
 
@@ -49,6 +50,8 @@ job-search/
 ├── preferences.md                           ← Search criteria (from onboarding)
 ├── positioning-prior.md                     ← Jobs Radar exec-register brief (thesis, summary, bullets, headline variants)
 ├── linkedin-ab-test.md                      ← 30-day headline A/B rotation + metrics
+├── pipeline.csv                             ← Full pipeline rolled up (Notion/ATS-importable)
+├── pipeline.md                              ← Dashboard grouped by status
 ├── [name]-resume.{md,pdf}                   ← Base resume
 ├── jobs-final.json                          ← Scored, ranked job shortlist
 └── [company-slug]/

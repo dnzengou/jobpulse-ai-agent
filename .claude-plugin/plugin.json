@@ -1,7 +1,7 @@
 {
   "name": "jobs-for-ai-agents",
   "description": "Your AI job-search wingman — find roles, polish your resume, research companies, tailor applications, and apply with browser assistance — all from Claude Code.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {
     "name": "JCodesMore",
     "url": "https://github.com/JCodesMore"

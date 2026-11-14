@@ -173,6 +173,35 @@ If the user wants browser-assisted apply for a specific job:
 4. **Never submit without explicit confirmation:** "Ready to submit? I'll click Submit now — say yes to proceed."
 5. After submission: record the date in `job-search/[company-slug]/apply-link.md`.
 
+## Step 9 — Pipeline tracker (on demand)
+
+After delivery, if the user asks for *"pipeline"*, *"tracker"*, *"status"*,
+*"summary of applications"*, or wants to share their progress, run:
+
+```bash
+python ${CLAUDE_PLUGIN_ROOT}/skills/findmeajob/scripts/export_tracker.py \
+  --root job-search \
+  --out  job-search/pipeline
+```
+
+This rolls up every `job-search/<company>/` folder into:
+
+- `job-search/pipeline.csv` — importable into Notion, Airtable, Google
+  Sheets, or a recruiter's ATS. Standard columns: company, role, status,
+  applied_on, apply_url, package completeness flags, notes.
+- `job-search/pipeline.md` — grouped dashboard (Offer → Final → Interview
+  → Applied → Drafted → Closed), with package completeness and apply
+  links.
+
+Status is inferred from keywords in each company's `apply-link.md`
+(`Status: interview scheduled`, `Applied on: 2026-11-05`, …). Tell the user
+they can edit those lines to move a role between columns — no new tool
+needed.
+
+Then say:
+> Dashboard: `job-search/pipeline.md` · CSV: `job-search/pipeline.csv` —
+> paste the CSV into Notion or share the dashboard markdown with a mentor.
+
 ## Subsequent Runs
 
 When `/findmeajob` runs again:

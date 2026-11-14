@@ -47,13 +47,14 @@ Talk to Claude like a friend:
 
 ## What's inside
 
-**Three skills** · **Six agents** · **One MCP server** (5 tools, 8 job boards) · **Browser-assisted apply**
+**Four skills** · **Eight agents** · **One MCP server** (5 tools, 8 job boards) · **Browser-assisted apply** · **Pipeline tracker** · **Agent-SEO kit**
 
 | Skill | What it does |
 |---|---|
-| `/findmeajob` | Full workflow: onboarding → resume → job search → research → application packages |
+| `/findmeajob` | Full workflow: 3-question onboarding → resume → job search → research → application packages → pipeline tracker (CSV + dashboard) |
 | `/apply` | Browser-assisted form fill — guided, confirmed at every step, never auto-submits |
 | `/setup` | View/edit preferences, reset data, manage resumes |
+| `/agent-seo` | Standalone deliverable — produces `llms.txt`, `agents.json`, JSON-LD, `robots.txt`, `sitemap.xml` to make any site or product citable by Perplexity, ChatGPT Search, Claude, and Gemini |
 
 | Agent | What it produces |
 |---|---|

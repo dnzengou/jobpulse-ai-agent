@@ -8,7 +8,74 @@
   <meta property="og:title" content="JobPulse AI Agent"/>
   <meta property="og:description" content="Find, research, and apply to jobs without leaving Claude Code. No API keys. Your data stays local. Works for any role, any industry."/>
   <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://jobpulse-ai-agent.vercel.app/"/>
+  <meta property="og:site_name" content="JobPulse AI Agent"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="JobPulse AI Agent"/>
+  <meta name="twitter:description" content="AI job-search agent for Claude Code — 8 boards, tailored resumes, cover letters, interview prep. 100% local, no API keys."/>
+  <link rel="canonical" href="https://jobpulse-ai-agent.vercel.app/"/>
+  <link rel="alternate" type="text/markdown" title="llms.txt" href="/llms.txt"/>
+  <link rel="alternate" type="application/json" title="agents.json" href="/agents.json"/>
   <meta name="theme-color" content="#0a0a0f"/>
+
+  <!-- ─── JSON-LD (agent-SEO) ─────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://jobpulse-ai-agent.vercel.app/#org",
+    "name": "JobPulse AI Agent",
+    "url": "https://jobpulse-ai-agent.vercel.app",
+    "sameAs": [
+      "https://github.com/dnzengou/jobpulse-ai-agent",
+      "https://discord.gg/babcVNJBet"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "JobPulse AI Agent",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "macOS, Linux, Windows",
+    "description": "AI job-search command centre inside Claude Code: searches 8 job boards, tailors resumes, writes cover letters, researches companies, assists with browser applications. 100% local.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "softwareVersion": "0.4.0",
+    "url": "https://jobpulse-ai-agent.vercel.app",
+    "downloadUrl": "https://github.com/dnzengou/jobpulse-ai-agent",
+    "license": "https://www.apache.org/licenses/LICENSE-2.0",
+    "author": { "@id": "https://jobpulse-ai-agent.vercel.app/#org" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Install JobPulse AI Agent",
+    "totalTime": "PT1M",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Install", "text": "Run /plugin marketplace add JCodesMore/jcodesmore-plugins then /plugin install jobs-for-ai-agents@jcodesmore-plugins inside Claude Code." },
+      { "@type": "HowToStep", "position": 2, "name": "Restart", "text": "Quit Claude Code and reopen it." },
+      { "@type": "HowToStep", "position": 3, "name": "Use", "text": "Run /findmeajob and answer three questions." }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "Do I need coding skills to use JobPulse?",                 "acceptedAnswer": { "@type": "Answer", "text": "No coding required. Install Claude Code, run two plugin commands, restart. Everything after that is natural language — the agent guides you step by step while the Python scripts run invisibly." } },
+      { "@type": "Question", "name": "Does it work for non-tech roles?",                          "acceptedAnswer": { "@type": "Answer", "text": "Yes. JobPulse works for product, sales, BD, finance, marketing, operations, design, research, and academia. The default scorer is tech-tuned but you can state your industry and specialised scorers run for niches like space, deep tech, blockchain, and climate." } },
+      { "@type": "Question", "name": "How many job boards does it search, and which ones?",      "acceptedAnswer": { "@type": "Answer", "text": "Up to 8 boards simultaneously: Indeed, LinkedIn, Glassdoor, ZipRecruiter, Google Jobs, Bayt, Naukri, and BDJobs. JobSpy handles the scraping with no API keys required." } },
+      { "@type": "Question", "name": "Is my resume and personal data safe?",                     "acceptedAnswer": { "@type": "Answer", "text": "Yes — everything is 100% local. Resume, preferences, cover letters, and research briefs live in a job-search/ folder on your own machine. No uploads, no telemetry, no cloud sync, no accounts." } },
+      { "@type": "Question", "name": "How is this different from LinkedIn Premium?",             "acceptedAnswer": { "@type": "Answer", "text": "LinkedIn Premium gives InMail credits, salary data, and profile views on one platform. JobPulse searches 8 boards, generates a tailored resume, cover letter, and interview prep per job, helps negotiate offers, and optionally fills the form — a full pipeline, not a single-platform upgrade, at $0 vs ~$40/month." } },
+      { "@type": "Question", "name": "What countries and languages are supported?",              "acceptedAnswer": { "@type": "Answer", "text": "Search works globally — Indeed covers 50+ countries, LinkedIn is worldwide, Google Jobs covers most markets. English by default; you can ask the agent to produce cover letters or bullets in another language. Country-specific flags are set automatically from your stated location." } },
+      { "@type": "Question", "name": "Can I use it without a paid Claude plan?",                 "acceptedAnswer": { "@type": "Answer", "text": "Claude Code requires an Anthropic plan (from $20/month). JobPulse itself is free and open source; job scraping, scoring, and file I/O cost nothing extra. A full pipeline for 3 jobs sits well inside a standard monthly quota." } }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
@@ -887,6 +954,15 @@
   </div>
   <p class="cta-sub">Apache 2.0 · No telemetry · No cloud sync · Your data stays yours</p>
 </div>
+
+<!-- ═══ CITATIONS (agent-SEO) ═════════════════════════════ -->
+<section aria-label="How to cite this page" style="max-width:720px;margin:0 auto 2rem;padding:1.25rem 1.5rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--muted);font-size:.88rem">
+  <strong style="color:var(--text)">Cite this page</strong> ·
+  <em>JobPulse AI Agent — Your AI job-search command centre inside Claude Code.</em>
+  <a href="https://jobpulse-ai-agent.vercel.app/" style="color:var(--cyan)">jobpulse-ai-agent.vercel.app</a> ·
+  Machine-readable: <a href="/llms.txt" style="color:var(--cyan)">/llms.txt</a>,
+  <a href="/agents.json" style="color:var(--cyan)">/agents.json</a>.
+</section>
 
 <!-- ═══ FOOTER ════════════════════════════════════════════ -->
 <footer>

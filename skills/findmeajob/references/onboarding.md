@@ -1,88 +1,84 @@
-# Onboarding Questionnaire
+# Onboarding — 3-question fast path (+ optional deepening)
 
-Ask these questions one at a time. Be conversational. Use multiple choice where possible.
+Goal: get to a first search in under 60 seconds. Rest is optional and
+captured opportunistically later in the conversation.
 
-## Questions
+**Rule:** one question per turn. Conversational, not a form. If the user
+answers more than one question in a single message, accept it and skip ahead.
 
-### 1. Role / Job Title
-> What kind of role are you looking for?
+## The fast path (3 questions)
+
+### Q1 — Role and seniority in one sentence
+> **What role are you hunting for?**
 >
-> For example: "Software Engineer", "Product Manager", "Data Scientist", "Marketing Manager"
+> One line is fine — I can read seniority out of it. For example:
+> *"Senior data engineer, 7 years"* or *"Staff AI engineer, LLM infra"* or
+> *"VP Product, B2B SaaS"*.
 
-Accept free text. This becomes the `search_term` for JobSpy.
+Accept free text. Parse seniority (entry/mid/senior/lead/exec) from the
+answer. Only ask explicitly if ambiguous.
 
-### 2. Location
-> Where are you looking to work?
+### Q2 — Location & remote in one
+> **Where?** City, country, or `remote` — and whether you'll travel for
+> hybrid days.
 >
-> A) Specific city/area (e.g., "San Francisco, CA")
-> B) Anywhere in a country (e.g., "USA")
-> C) Remote only
-> D) Doesn't matter
+> Examples: *"remote, Europe timezone"*, *"NYC, hybrid 2 days"*,
+> *"Berlin or remote"*, *"anywhere in the US"*.
 
-If A: ask for the city/state. If C: set `is_remote=true`. If D: use "USA" as default.
+Parse the string. Set `is_remote=true` if "remote" is the whole answer.
+Capture a location string for JobSpy regardless.
 
-### 3. Remote Preference
-Only ask if they chose A or B above:
-> Are you open to remote positions too, or only on-site/hybrid?
+### Q3 — Dealbreakers
+> **Any dealbreakers?** Industries to skip, minimum salary, no on-call,
+> visa sponsorship required, etc. Say "none" if nothing comes to mind.
+
+Freeform. Store under `Notes:` in `preferences.md`.
+
+**That's enough to run a first search.** Save the three answers to
+`job-search/preferences.md` and move to Step 3 (resume) in the SKILL.md flow.
+
+## Optional deepening (ask only if useful)
+
+Trigger each of these *in context*, not upfront:
+
+- **Employment type** — only if `job_type` would meaningfully narrow results
+  (e.g. user mentioned "contract-to-hire" or "internship").
+- **Industry** — only if the user hasn't named one and the first search comes
+  back with too much variety.
+- **Target companies** — ask when offering to run company research so the
+  user can pre-seed a short list.
+- **Salary target** — ask when presenting results so the scorer can sort
+  compensation; many users prefer to see real listings before stating a number.
+
+## Returning users
+
+If `job-search/preferences.md` exists:
+
+> **Welcome back.** I have you down for *[role]* in *[location]* — still
+> accurate, or shall we tweak it?
 >
-> A) Remote is fine
-> B) On-site/hybrid only
-> C) Remote only
+> - **Yes, same** → jump to deep search
+> - **Tweak a field** → quick edit
+> - **Full reset** → run `/setup` to wipe and start over
 
-### 4. Experience Level
-> What's your experience level?
->
-> A) Entry level / New grad (0-2 years)
-> B) Mid-level (2-5 years)
-> C) Senior (5-10 years)
-> D) Lead / Staff / Principal (10+ years)
-> E) Executive / Director
+Do not re-run the full questionnaire; the whole point is that we stored it.
 
-This helps with result relevance but doesn't directly map to a JobSpy parameter. Use it when presenting results and for resume context.
+## Saving `preferences.md`
 
-### 5. Employment Type
-> What type of employment?
->
-> A) Full-time (default)
-> B) Part-time
-> C) Contract
-> D) Internship
-> E) Open to any
-
-Maps to JobSpy `job_type` parameter.
-
-### 6. Salary Range (optional)
-> Do you have a target salary range? (Optional — skip if you prefer)
-
-If provided, note it for result filtering and resume context.
-
-### 7. Industry (optional)
-> Any specific industry? (Optional)
->
-> For example: "fintech", "healthcare", "education", "e-commerce"
-
-If provided, append to search term or use for result filtering.
-
-### 8. Anything Else
-> Anything else I should know? Specific companies you're targeting, skills you want to use, things you want to avoid?
-
-Free text. Store any relevant notes in preferences.
-
-## Saving Preferences
-
-After collecting answers, write to `job-search/preferences.md`:
-
-```
+```markdown
 # Job Search Preferences
 
-**Role:** [their answer]
-**Location:** [their answer]
-**Remote:** [yes/no/only]
-**Experience Level:** [their answer]
-**Employment Type:** [their answer]
-**Salary Range:** [their answer or "Not specified"]
-**Industry:** [their answer or "Any"]
-**Notes:** [anything else they mentioned]
+**Role:** [free-text role + seniority as given]
+**Seniority (parsed):** entry | mid | senior | lead | exec
+**Location:** [city/country/remote string]
+**Remote:** yes | no | hybrid
+**Employment Type:** [only if asked, else "Full-time (default)"]
+**Salary Target:** [only if given]
+**Industry:** [only if given]
+**Dealbreakers / Notes:** [free text]
 
-**Last Updated:** [date]
+**Last Updated:** [YYYY-MM-DD]
 ```
+
+Keep the schema stable — downstream agents (`resume-customizer`,
+`company-researcher`) read these keys by name.
