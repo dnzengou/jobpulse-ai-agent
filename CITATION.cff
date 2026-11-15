@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use JobPulse AI Agent in your research or in a comparable public write-up, please cite it as below."
+title: "JobPulse AI Agent"
+abstract: "A Claude Code plugin that automates the end-to-end job application workflow — multi-board search, company research, resume customization, cover letters, interview prep, salary negotiation, LinkedIn optimization, and browser-assisted apply — entirely on the user's machine."
+type: software
+version: "0.4.0"
+date-released: "2026-05-21"
+url: "https://github.com/dnzengou/jobpulse-ai-agent"
+repository-code: "https://github.com/dnzengou/jobpulse-ai-agent"
+license: Apache-2.0
+keywords:
+  - job-search
+  - resume
+  - cover-letter
+  - interview-prep
+  - salary-negotiation
+  - linkedin
+  - mcp
+  - model-context-protocol
+  - claude-code
+  - ai-agent
+authors:
+  - alias: dnzengou
+    website: "https://github.com/dnzengou"
+references:
+  - type: software
+    title: "JobSpy"
+    url: "https://github.com/speedyapply/JobSpy"
+    scope: "Underlying multi-board job scraping library."
+  - type: software
+    title: "Model Context Protocol SDK"
+    url: "https://github.com/modelcontextprotocol"
+    scope: "Transport and tool-exposure protocol for Claude Code."

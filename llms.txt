@@ -1,0 +1,59 @@
+# JobPulse AI Agent
+
+> A Claude Code plugin that runs the whole job search on your own machine. Searches 8 job boards via JobSpy, builds a company research brief, customizes your resume per posting, writes a cover letter, preps interviews, drafts salary counter-offers, optimizes your LinkedIn, and — with explicit confirmation — fills out application forms in your browser. No API keys, no telemetry, no cloud sync.
+
+This file follows the [llms.txt convention](https://llmstxt.org/) so LLM-powered search tools can map the repository quickly and cite accurate, file-level sources.
+
+The single most important file to ground any factual claim is [`FACTS.md`](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/FACTS.md) — every public claim about JobPulse is mapped there to the code or doc that proves it.
+
+## Core docs
+
+- [README](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/README.md): what JobPulse is, quick start, user-facing feature summary.
+- [AGENTS.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/AGENTS.md): machine-readable map of the plugin — MCP tools, skills, agents, data layout, typical flow.
+- [BLUEPRINT.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/BLUEPRINT.md): production architecture, file map, MCP tool reference, release notes.
+- [FACTS.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/FACTS.md): every public claim mapped to the file that proves it.
+- [INTEGRATE.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/INTEGRATE.md): how other agents, SDKs, apps, and CI call the MCP server.
+- [CHANGELOG.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/CHANGELOG.md): version history.
+
+## MCP server
+
+- [mcp/job_server.py](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/mcp/job_server.py): the MCP server. Five tools: `search_jobs`, `search_jobs_batch`, `get_supported_sites`, `get_supported_countries`, `get_search_tips`. Backed by [JobSpy](https://github.com/speedyapply/JobSpy).
+- [mcp/requirements.txt](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/mcp/requirements.txt): three runtime Python deps — `mcp`, `python-jobspy`, `pandas`.
+- [mcp/test_server.py](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/mcp/test_server.py): offline smoke tests (no network).
+
+## Skills (end-user slash commands)
+
+- [skills/findmeajob/SKILL.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/skills/findmeajob/SKILL.md): main workflow — onboarding → search → research → customize → deliver.
+- [skills/apply/SKILL.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/skills/apply/SKILL.md): browser-assisted form fill — never submits without the user's explicit "submit".
+- [skills/setup/SKILL.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/skills/setup/SKILL.md): configuration management.
+
+## Agents
+
+- [agents/resume-reviewer.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/agents/resume-reviewer.md)
+- [agents/resume-builder.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/agents/resume-builder.md)
+- [agents/company-researcher.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/agents/company-researcher.md)
+- [agents/resume-customizer.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/agents/resume-customizer.md)
+- [agents/cover-letter-writer.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/agents/cover-letter-writer.md)
+- [agents/interview-prepper.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/agents/interview-prepper.md)
+- [agents/salary-negotiator.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/agents/salary-negotiator.md)
+- [agents/linkedin-optimizer.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/agents/linkedin-optimizer.md)
+
+## Reference knowledge the agents cite
+
+- [references/resume-best-practices.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/references/resume-best-practices.md)
+- [references/resume-formatting.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/references/resume-formatting.md)
+- [references/company-evaluation-criteria.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/references/company-evaluation-criteria.md)
+- [references/job-posting-analysis.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/references/job-posting-analysis.md)
+
+## Policy
+
+- [LICENSE](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/LICENSE): Apache 2.0.
+- [SECURITY.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/SECURITY.md): threat model + how to report issues.
+- [ai.txt](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/ai.txt): AI-use policy (what you may cite, quote, and train on).
+- [CODE_OF_CONDUCT.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/CODE_OF_CONDUCT.md)
+
+## Optional
+
+- [CITATION.cff](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/CITATION.cff): machine-readable citation metadata.
+- [CONTRIBUTING.md](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/CONTRIBUTING.md): how to contribute code.
+- [public/index.html](https://github.com/dnzengou/jobpulse-ai-agent/blob/main/public/index.html): source of the hosted landing page at [jobpulse-ai-agent.vercel.app](https://jobpulse-ai-agent.vercel.app).

@@ -2,12 +2,18 @@
 JobSpy MCP Server — thin scraping layer for the jobs-for-ai-agents plugin.
 
 All intelligence (resume handling, company research, scoring) lives in
-skills and agents. This server just scrapes and serializes.
+skills and agents. This server just scrapes, serializes, and — for the
+optional local outcome log — appends JSONL lines to the user's
+job-search/outcomes.jsonl. There are no outbound network calls other than
+the job-board scraping done by JobSpy.
 """
 
 import json
 import logging
-from datetime import date, datetime
+import os
+import re
+from datetime import date, datetime, timezone
+from pathlib import Path
 from typing import Optional
 
 import pandas as pd
@@ -308,6 +314,144 @@ def get_search_tips() -> str:
 **No results?**
   Broaden search term, drop level qualifier, try different sites, increase hours_old.
 """
+
+
+# ─── Local-only outcome tracker ───────────────────────────────────────────────
+# Writes to job-search/outcomes.jsonl in the user's working directory.
+# No network. No telemetry. One append-only JSONL line per event.
+# Schema is additive — new fields and event types may appear over time.
+# Documented in INTEGRATE.md § "Trajectory / outcome log".
+
+VALID_EVENTS = {
+    "shortlisted", "customized", "applied",
+    "responded", "interview", "offer", "rejected", "withdrawn",
+}
+
+_SLUG_RE = re.compile(r"[^a-z0-9]+")
+
+
+def _outcomes_path() -> Path:
+    base = Path(os.environ.get("JOBPULSE_WORKDIR", ".")).resolve()
+    return base / "job-search" / "outcomes.jsonl"
+
+
+def _slug(value: str) -> str:
+    return _SLUG_RE.sub("-", value.lower()).strip("-")
+
+
+@mcp.tool()
+def log_outcome(
+    event: str,
+    company: str,
+    role: str,
+    source: Optional[str] = None,
+    score: Optional[int] = None,
+    variant: Optional[str] = None,
+    run_id: Optional[str] = None,
+    notes: Optional[str] = None,
+) -> str:
+    """
+    Append one event to the local application tracker (job-search/outcomes.jsonl).
+
+    Local-only, no network. Used by the /track skill and by /findmeajob and
+    /apply to record what happened for which job.
+
+    Args:
+        event: One of shortlisted, customized, applied, responded, interview,
+               offer, rejected, withdrawn.
+        company: Company name as it appears in the shortlist.
+        role: Job title as it appears in the shortlist.
+        source: Which board the job came from (indeed, linkedin, ...).
+        score: Score from process_jobs.py, if known.
+        variant: Optional label of which resume variant was used.
+        run_id: Stable id per /findmeajob session (optional).
+        notes: Free-text notes (optional).
+
+    Returns:
+        JSON confirming the write, with the file path and the line that was appended.
+    """
+    if event not in VALID_EVENTS:
+        return json.dumps({
+            "error": f"Invalid event '{event}'. Valid: {sorted(VALID_EVENTS)}"
+        })
+
+    record = {
+        "ts": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "run_id": run_id or f"r_{_slug(datetime.now(timezone.utc).strftime('%Y-%m-%d-%H%M%S'))}",
+        "event": event,
+        "company": company,
+        "role": role,
+    }
+    for k, v in (("source", source), ("score", score),
+                 ("variant", variant), ("notes", notes)):
+        if v is not None:
+            record[k] = v
+
+    path = _outcomes_path()
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except OSError as exc:
+        return json.dumps({"error": f"Could not write {path}: {exc}"})
+
+    return json.dumps({"ok": True, "path": str(path), "appended": record})
+
+
+@mcp.tool()
+def list_outcomes(
+    event: Optional[str] = None,
+    company: Optional[str] = None,
+    limit: int = 50,
+) -> str:
+    """
+    Read the local application tracker (job-search/outcomes.jsonl).
+
+    Local-only, no network. Returns the most recent `limit` entries, optionally
+    filtered by event or company (case-insensitive substring match on company).
+
+    Args:
+        event: Filter by exact event type (shortlisted, applied, ...).
+        company: Case-insensitive substring filter on company name.
+        limit: Max entries to return (default 50).
+
+    Returns:
+        JSON with {total, returned, path, entries[]}. Entries are newest-first.
+    """
+    path = _outcomes_path()
+    if not path.exists():
+        return json.dumps({
+            "total": 0, "returned": 0, "path": str(path), "entries": [],
+            "message": "No outcomes logged yet. Use log_outcome to record one.",
+        })
+
+    entries: list[dict] = []
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entries.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+    except OSError as exc:
+        return json.dumps({"error": f"Could not read {path}: {exc}"})
+
+    total = len(entries)
+    if event:
+        entries = [e for e in entries if e.get("event") == event]
+    if company:
+        needle = company.lower()
+        entries = [e for e in entries if needle in str(e.get("company", "")).lower()]
+
+    entries.reverse()
+    returned = entries[: max(1, int(limit))]
+    return json.dumps(
+        {"total": total, "returned": len(returned), "path": str(path), "entries": returned},
+        indent=2,
+        default=_serialize,
+    )
 
 
 if __name__ == "__main__":
